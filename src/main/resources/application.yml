@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      host: 118.25.158.194
+      port: 27017
+      authentication-database: test
+      username: david
+      password: password
