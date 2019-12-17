@@ -12,6 +12,20 @@ public class Patient {
     private List<History> history;
     private List<Diagnose> diagnose;
 
+    public Patient() {
+    }
+
+    public Patient(String id, String name, String birthday, String gender, String phone, String address, List<History> history, List<Diagnose> diagnose) {
+        this.id = id;
+        this.name = name;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.phone = phone;
+        this.address = address;
+        this.history = history;
+        this.diagnose = diagnose;
+    }
+
     public String getId() {
         return id;
     }

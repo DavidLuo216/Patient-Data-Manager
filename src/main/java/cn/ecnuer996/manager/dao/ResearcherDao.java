@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ResearcherDao {
     @Autowired
@@ -38,4 +40,13 @@ public class ResearcherDao {
         Query query=new Query(Criteria.where("id").is(id));
         mongoTemplate.remove(query,Researcher.class);
     }
+
+    //find all
+
+    public List<Researcher> findAllResaerchers(){
+        List<Researcher> researcherList = mongoTemplate.findAll(Researcher.class);
+        return researcherList;
+    }
 }
+
+

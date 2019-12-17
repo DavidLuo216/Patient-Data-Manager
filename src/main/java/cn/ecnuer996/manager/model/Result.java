@@ -9,6 +9,19 @@ public class Result {
     private ResultData shrink;
     private ResultData stretch;
 
+    public Result() {
+    }
+
+    public Result(String researcher, String patientId, String checkDate, String processDate, Algorithm algorithm, ResultData shrink, ResultData stretch) {
+        this.researcher = researcher;
+        this.patientId = patientId;
+        this.checkDate = checkDate;
+        this.processDate = processDate;
+        this.algorithm = algorithm;
+        this.shrink = shrink;
+        this.stretch = stretch;
+    }
+
     public String getResearcher() {
         return researcher;
     }

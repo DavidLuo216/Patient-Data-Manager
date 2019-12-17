@@ -18,7 +18,7 @@ public class ResultController {
     @GetMapping(value="get-result")
     public JSONObject getPatient(@RequestParam String id){
         JSONObject response=new JSONObject();
-        Result result =resultDao.findAccountByName(id);
+        Result result =resultDao.findResultByID(id);
         response.put("result",result);
         return response;
     }

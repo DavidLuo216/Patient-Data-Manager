@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ResultDao {
     @Autowired
@@ -18,9 +20,18 @@ public class ResultDao {
     }
 
     //query
-    public Result findAccountByName(String id){
+    public Result findResultByID(String id){
         Query query=new Query(Criteria.where("_id").is(id));
         Result result=mongoTemplate.findOne(query,Result.class);
         return result;
+    }
+
+    public List<Result> findResult(){
+        return null;
+    }
+
+    //delete
+    public void deleteResultByID(String id){
+
     }
 }

@@ -3,7 +3,7 @@ package cn.ecnuer996.manager.model;
 import java.util.List;
 
 public class Researcher {
-    private String name;
+    private String name; //唯一标识
     private String password;
     private List<String> roles;
     private boolean prohibited;
