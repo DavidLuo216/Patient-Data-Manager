@@ -39,6 +39,18 @@ public class PatientDao {
         return patientList;
     }
 
+    /**
+     * 多条件查询，以一个Patient对象作为查询条件
+     * 对参数patient不为null的字段进行相等查询
+     * @param patient
+     * @return
+     */
+    public List<Patient> findByExample(Patient patient){
+        Criteria criteria=Criteria.byExample(patient);
+        Query query=Query.query(criteria);
+        return mongoTemplate.find(query,Patient.class,"patient");
+    }
+
     // update
     public int updatePatient(Patient patient){
         Query query = new Query(Criteria.where("_id").is(patient.getId()));

@@ -38,6 +38,13 @@ public interface PatientService {
     public List<Patient> findPatient(String id,String name,String birthday,String gender,String phone,String address);
 
     /**
+     * 根据参数patient中不为null的字段进行多条件相等查询
+     * @param patient
+     * @return
+     */
+    List<Patient> findByExample(Patient patient);
+
+    /**
      * 修改病人信息
      * @param patient
      */
