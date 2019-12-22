@@ -42,7 +42,7 @@ public class ResearcherDao {
     //update
     public void updateResearcher(Researcher researcher){
         Query query=new Query(Criteria.where("name").is(researcher.getName()));
-        Update update=new Update().set("name",researcher.getName())
+        Update update=new Update()//.set("name",researcher.getName())
                 .set("password",researcher.getPassword()).set("roles",researcher.getRoles())
                 .set("prohibited",String.valueOf(researcher.isProhibited()));
         mongoTemplate.updateFirst(query,update,Researcher.class);

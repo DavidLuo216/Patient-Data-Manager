@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.dao;
 
+import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,8 @@ public class PatientDao {
                 .set("phone",patient.getPhone())
                 .set("address",patient.getAddress())
                 .set("history",patient.getHistory())
-                .set("diagnose",patient.getDiagnose());
+//                .set("diagnose",patient.getDiagnose())
+        ;
         mongoTemplate.updateFirst(query,update,Patient.class);
         return 1;
     }
@@ -77,9 +79,12 @@ public class PatientDao {
         return mongoTemplate.findAll(Patient.class);
     }
 
-    //添加病史
-    public void addHistory(Patient patient,History history){
-        patient.getHistory().add(history);
+    //添加诊疗信息
+    public void updateDiagnoseList(Patient patient, List<Diagnose> diagnoseList){
+        Query query = new Query(Criteria.where("_id").is(patient.getId()));
+        Update update = new Update().set("diagnose",diagnoseList);
+        mongoTemplate.updateFirst(query,update,Patient.class);
     }
+
 }
 

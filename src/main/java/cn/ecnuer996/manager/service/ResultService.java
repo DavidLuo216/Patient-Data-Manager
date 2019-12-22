@@ -33,5 +33,7 @@ public interface ResultService  {
 
     public void updateResult(Result result);
 
+    List<Result> findResult(Result result);
+
 
 }

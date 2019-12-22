@@ -1,6 +1,7 @@
 package cn.ecnuer996.manager.service;
 
 
+import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import java.util.List;
@@ -56,7 +57,7 @@ public interface PatientService {
      */
     public  List<Patient> findAll();
 
-    void addHistory(Patient patient, History history);
+    void addDiagnose(String id, Diagnose diagnose);
 
 
 

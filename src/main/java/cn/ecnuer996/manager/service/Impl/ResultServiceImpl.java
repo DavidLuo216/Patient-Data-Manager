@@ -13,22 +13,23 @@ import java.util.List;
 @Service
 public class ResultServiceImpl implements ResultService {
     @Autowired
-    private ResultDao resultDaoDao;
+    private ResultDao resultDao;
 
     @Override
     public Result getResultByID(String id) {
-        return null;
+        return resultDao.findResultByID(id);
     }
 
     @Override
     public Result saveResult(Result result) {
-        return null;
+        return resultDao.saveResult(result);
     }
 
     @Override
     public Result getResultByPatientID(String patientId) {
         return null;
     }
+
 
     @Override
     public void deleteResult(String id) {
@@ -37,11 +38,16 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public List<Result> findAll() {
-        return null;
+        return resultDao.findAllResult();
     }
 
     @Override
     public void updateResult(Result result) {
 
+    }
+
+    @Override
+    public List<Result> findResult(Result result) {
+        return resultDao.findByExample(result);
     }
 }

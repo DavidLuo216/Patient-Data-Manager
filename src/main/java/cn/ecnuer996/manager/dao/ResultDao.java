@@ -16,8 +16,8 @@ public class ResultDao {
     private MongoTemplate mongoTemplate;
 
     // insert
-    public void saveResult(Result result){
-        mongoTemplate.save(result);
+    public Result saveResult(Result result){
+        return mongoTemplate.save(result);
     }
 
     //query
@@ -36,5 +36,14 @@ public class ResultDao {
     public void deleteResultByID(String id){
         Query query=new Query(Criteria.where("_id").is(id));
         mongoTemplate.remove(query, Result.class);
+    }
+
+    /**
+     * 多条件查询
+     */
+    public List<Result> findByExample(Result result){
+        Criteria criteria=Criteria.byExample(result);
+        Query query=Query.query(criteria);
+        return mongoTemplate.find(query,Result.class,"result");
     }
 }

@@ -4,8 +4,10 @@ import cn.ecnuer996.manager.dao.PatientDao;
 import cn.ecnuer996.manager.error.BusinessException;
 import cn.ecnuer996.manager.error.ErrorEm;
 import cn.ecnuer996.manager.error.ProdProcessOrderException;
+import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
+import cn.ecnuer996.manager.model.Result;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,15 +104,18 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public void addHistory(Patient patient, History history) {
-        String disease = history.getDisease();
-        String details = history.getDetails();
-        if(disease == null||disease.equals("")){
-            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请填写病症");
-        }
-        if(details == null||details.equals("")){
-            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请描述细节");
-        }
-        patientDao.addHistory(patient,history);
+    public void addDiagnose(String id, Diagnose diagnose) {
+        Patient patient = patientDao.findPatientByID(id);
+        List<Diagnose> diagnoseList = patient.getDiagnose();
+        diagnoseList.add(diagnose);
+        patientDao.updateDiagnoseList(patient,diagnoseList);
+
+//        if(disease == null||disease.equals("")){
+//            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请填写病症");
+//        }
+//        if(details == null||details.equals("")){
+//            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请描述细节");
+//        }
+//        patientDao.addHistory(patient,history);
     }
 }

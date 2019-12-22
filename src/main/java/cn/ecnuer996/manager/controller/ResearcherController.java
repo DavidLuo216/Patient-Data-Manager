@@ -77,6 +77,11 @@ public class ResearcherController extends ExceptionResponse {
         JSONObject data = new JSONObject();
         response.put("data",data);
         List<Researcher> researcherList = researcherService.findByExample(researcher);
+        if(researcherList.isEmpty()){
+            response.put("code",500);
+            response.put("message","无结果");
+            return response;
+        }
 //        List<Researcher> researcherList = researcherService.findAll();
         for(Researcher r : researcherList){
             JSONObject tmp = new JSONObject();

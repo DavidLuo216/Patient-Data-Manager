@@ -1,6 +1,7 @@
 package cn.ecnuer996.manager.controller;
 
 import cn.ecnuer996.manager.error.ExceptionResponse;
+import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.service.PatientService;
@@ -97,6 +98,11 @@ public class PatientController extends ExceptionResponse {
         JSONObject data=new JSONObject();
         response.put("data",data);
         List<Patient> patientList=patientService.findByExample(patient);
+        if(patientList.isEmpty()){
+            response.put("code",500);
+            response.put("message","无结果");
+            return response;
+        }
         data.put("patientList",patientList);
         //状态码，200是成功，其他可自定义（如500表示查询失败）
         response.put("code",200);
@@ -104,14 +110,20 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
-    //添加病史
-    @PostMapping(value = "/patientHistory")
-    public String addHistory(@RequestParam("id") String id,@RequestParam History history){
-        Patient patient = patientService.getPatientByID(id);
-        return"Success";
+    /**
+     *  添加诊疗信息
+     * @param id
+     * @param diagnose
+     * @return
+     */
+    @PatchMapping(value = "/patient/{id}")
+    public JSONObject addDiagnose(@PathVariable(value = "id")String id,Diagnose diagnose){
+        JSONObject response = new JSONObject();
+        patientService.addDiagnose(id,diagnose);
+        response.put("code",200);
+        response.put("message","添加成功");
+        return response;
     }
-
-
 
 
 }
