@@ -4,6 +4,9 @@ import cn.ecnuer996.manager.model.Researcher;
 import java.util.List;
 
 public interface ResearcherService {
+
+
+//    public
     /**
      * 根据name get Resarcher
      * @param name 唯一标识

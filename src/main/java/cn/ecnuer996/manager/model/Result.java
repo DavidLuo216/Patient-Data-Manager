@@ -1,6 +1,7 @@
 package cn.ecnuer996.manager.model;
 
 public class Result {
+    private  String _id;
     private String researcher;
     private String patientId;
     private String checkDate;
@@ -12,7 +13,8 @@ public class Result {
     public Result() {
     }
 
-    public Result(String researcher, String patientId, String checkDate, String processDate, Algorithm algorithm, ResultData shrink, ResultData stretch) {
+    public Result(String _id,String researcher, String patientId, String checkDate, String processDate, Algorithm algorithm, ResultData shrink, ResultData stretch) {
+        this._id = _id;
         this.researcher = researcher;
         this.patientId = patientId;
         this.checkDate = checkDate;
@@ -77,4 +79,6 @@ public class Result {
     public void setStretch(ResultData stretch) {
         this.stretch = stretch;
     }
+
+
 }

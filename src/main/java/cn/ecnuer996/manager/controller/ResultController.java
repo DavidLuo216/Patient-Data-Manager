@@ -21,5 +21,7 @@ public class ResultController {
         Result result =resultDao.findResultByID(id);
         response.put("result",result);
         return response;
+
+
     }
 }

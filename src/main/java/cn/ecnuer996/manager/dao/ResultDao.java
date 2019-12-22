@@ -34,7 +34,7 @@ public class ResultDao {
 
     //delete
     public void deleteResultByID(String id){
-        Query query=new Query(Criteria.where("id").is(id));
+        Query query=new Query(Criteria.where("_id").is(id));
         mongoTemplate.remove(query, Result.class);
     }
 }
