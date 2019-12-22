@@ -30,16 +30,15 @@ public interface ResearcherService {
     public Researcher saveResearcher(Researcher researcher);
 
     /**
-     * 查找
-     * @param name
+     * 返回指定职位Researchers
      * @param roles
      * @return
      */
-    public List<Researcher> findResearcher(String name,List<String> roles);
+    public List<Researcher> findResearchersByRoles(List<String> roles);
 
     /**
      * 列出所有
      * @return
      */
-    public List<Researcher>  findAll();
+    public List<Researcher>findAll();
 }

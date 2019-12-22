@@ -1,9 +1,13 @@
 package cn.ecnuer996.manager.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class Patient {
+    @NotNull(message = "输入病人ID！")
     private String id;
+    @NotNull(message = "输入病人姓名！")
     private String name;
     private String birthday;
     private String gender;

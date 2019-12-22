@@ -1,6 +1,7 @@
 package cn.ecnuer996.manager.service;
 
 
+import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import java.util.List;
 
@@ -40,13 +41,15 @@ public interface PatientService {
      * 修改病人信息
      * @param patient
      */
-    public void updatePatient(Patient patient);
+    public int updatePatient(Patient patient);
 
     /**
      * 列出所有病人
      * @return
      */
     public  List<Patient> findAll();
+
+    void addHistory(Patient patient, History history);
 
 
 

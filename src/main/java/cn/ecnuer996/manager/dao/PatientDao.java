@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.dao;
 
+import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,17 +30,19 @@ public class PatientDao {
 
     //query模糊查找
     public List<Patient> findPatient(String name,String birthday,String gender,String phone,String address){
-        Criteria criteria = Criteria.where("name").regex(name).and("birthday").regex(birthday)
-                .and("gender").regex(gender).and("phone").regex(phone).and("address").regex(address);
+//        Criteria criteria = Criteria.where("name").regex(name).and("birthday").regex(birthday)
+//                .and("gender").regex(gender).and("phone").regex(phone).and("address").regex(address);
+        Criteria criteria = Criteria.where("name").is(name).and("birthday").is(birthday)
+                .and("gender").is(gender).and("phone").is(phone).and("address").is(address);
         Query query = Query.query(criteria);//.limit(limit).skip(skip) 构建查询条件 并设置分页和至多返回limit条（后面的没设置）
         List<Patient> patientList = mongoTemplate.find(query, Patient.class);
         return patientList;
     }
 
     // update
-    public void updatePatient(Patient patient){
+    public int updatePatient(Patient patient){
         Query query = new Query(Criteria.where("_id").is(patient.getId()));
-        Update update = new Update().set("_id",patient.getId())
+        Update update = new Update()
                 .set("name",patient.getName())
                 .set("birthday",patient.getBirthday())
                 .set("gender",patient.getGender())
@@ -48,6 +51,7 @@ public class PatientDao {
                 .set("history",patient.getHistory())
                 .set("diagnose",patient.getDiagnose());
         mongoTemplate.updateFirst(query,update,Patient.class);
+        return 1;
     }
 
     // delete
@@ -60,4 +64,10 @@ public class PatientDao {
     public List<Patient> findAllPatients(){
         return mongoTemplate.findAll(Patient.class);
     }
+
+    //添加病史
+    public void addHistory(Patient patient,History history){
+        patient.getHistory().add(history);
+    }
 }
+

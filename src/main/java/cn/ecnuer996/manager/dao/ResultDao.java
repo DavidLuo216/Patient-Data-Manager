@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.dao;
 
+import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,12 +27,14 @@ public class ResultDao {
         return result;
     }
 
-    public List<Result> findResult(){
-        return null;
+    public List<Result> findAllResult(){
+        List<Result> resultList = mongoTemplate.findAll(Result.class);
+        return resultList;
     }
 
     //delete
     public void deleteResultByID(String id){
-
+        Query query=new Query(Criteria.where("id").is(id));
+        mongoTemplate.remove(query, Result.class);
     }
 }

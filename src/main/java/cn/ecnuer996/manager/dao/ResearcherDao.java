@@ -16,8 +16,8 @@ public class ResearcherDao {
     private MongoTemplate mongoTemplate;
 
     // insert
-    public void saveResearcher(Researcher researcher){
-        mongoTemplate.save(researcher);
+    public Researcher saveResearcher(Researcher researcher){
+        return mongoTemplate.save(researcher);
     }
 
     //query
@@ -26,6 +26,12 @@ public class ResearcherDao {
         Researcher researcher=mongoTemplate.findOne(query,Researcher.class);
         return researcher;
     }
+
+
+    //根据用户组来查找用户
+//    public Researcher findResearcherByRole(String role){
+//        Query query = new Query(Criteria.where("roles").is());
+//    }
 
     //update
     public void updateResearcher(Researcher researcher){
@@ -36,17 +42,18 @@ public class ResearcherDao {
     }
 
     //delete
-    public void deleteResearcher(Integer id){
-        Query query=new Query(Criteria.where("id").is(id));
+    public void deleteResearcherByName(String name){
+        Query query=new Query(Criteria.where("name").is(name));
         mongoTemplate.remove(query,Researcher.class);
     }
 
     //find all
 
-    public List<Researcher> findAllResaerchers(){
+    public List<Researcher> findAllResearchers(){
         List<Researcher> researcherList = mongoTemplate.findAll(Researcher.class);
         return researcherList;
     }
+
 }
 
 

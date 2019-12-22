@@ -1,12 +1,18 @@
 package cn.ecnuer996.manager.model;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class Researcher {
+    @NotBlank(message = "用户不能为空")
     private String name; //唯一标识
+
+    @NotBlank(message = "密码不能为空")
     private String password;
+
+
     private List<String> roles;
-    private boolean prohibited;
+    private boolean isProhibited;
     private String registerTime;
     private String lastLoginTime;
 
@@ -35,11 +41,11 @@ public class Researcher {
     }
 
     public boolean isProhibited() {
-        return prohibited;
+        return isProhibited;
     }
 
     public void setProhibited(boolean prohibited) {
-        this.prohibited = prohibited;
+        this.isProhibited = prohibited;
     }
 
     public String getRegisterTime() {
