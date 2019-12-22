@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.service;
 
+import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.model.Researcher;
 import java.util.List;
 
@@ -44,4 +45,12 @@ public interface ResearcherService {
      * @return
      */
     public List<Researcher>findAll();
+
+    /**
+     * 忽略null
+     * @param researcher
+     * @return
+     */
+    List<Researcher> findByExample(Researcher researcher);
+
 }

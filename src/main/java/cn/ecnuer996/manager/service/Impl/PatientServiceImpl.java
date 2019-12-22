@@ -35,6 +35,9 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public void deletePatient(String id) {
+        if(id==null||id.equals("")){
+            throw new ProdProcessOrderException("ID为空");
+        }
         patientDao.deletePatient(id);
     }
 
@@ -71,10 +74,10 @@ public class PatientServiceImpl implements PatientService {
             throw new ProdProcessOrderException("姓名为空");
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"姓名不可为空");
         }
-//        if(birthday == null||birthday.equals("")){
-//            throw new ProdProcessOrderException("生日为空");
+        if(birthday == null||birthday.equals("")){
+            throw new ProdProcessOrderException("生日为空");
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"生日不可为空");
-//        }
+        }
         if(gender == null||gender.equals("")){
             throw new ProdProcessOrderException("性别为空");
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"性别不可为空");

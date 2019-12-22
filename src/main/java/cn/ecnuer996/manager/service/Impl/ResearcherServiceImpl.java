@@ -2,6 +2,7 @@ package cn.ecnuer996.manager.service.Impl;
 
 import cn.ecnuer996.manager.dao.ResearcherDao;
 import cn.ecnuer996.manager.error.ProdProcessOrderException;
+import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.service.ResearcherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,10 @@ public class ResearcherServiceImpl implements ResearcherService {
     @Override
     public List<Researcher> findAll() {
         return researcherDao.findAllResearchers();
+    }
+
+    @Override
+    public List<Researcher> findByExample(Researcher researcher) {
+        return researcherDao.findByExample(researcher);
     }
 }

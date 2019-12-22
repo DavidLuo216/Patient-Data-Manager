@@ -33,11 +33,18 @@ public class ResearcherDao {
 //        Query query = new Query(Criteria.where("roles").is());
 //    }
 
+    public List<Researcher> findByExample(Researcher researcher){
+        Criteria criteria = Criteria.byExample(researcher);
+        Query query = Query.query(criteria);
+        return mongoTemplate.find(query,Researcher.class,"researcher");
+    }
+
     //update
     public void updateResearcher(Researcher researcher){
         Query query=new Query(Criteria.where("name").is(researcher.getName()));
         Update update=new Update().set("name",researcher.getName())
-                .set("password",researcher.getPassword()).set("roles",researcher.getRoles());
+                .set("password",researcher.getPassword()).set("roles",researcher.getRoles())
+                .set("prohibited",String.valueOf(researcher.isProhibited()));
         mongoTemplate.updateFirst(query,update,Researcher.class);
     }
 

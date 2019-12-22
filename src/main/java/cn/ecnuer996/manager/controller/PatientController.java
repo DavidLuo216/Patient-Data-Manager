@@ -46,6 +46,10 @@ public class PatientController extends ExceptionResponse {
     @PostMapping(value = "/patientDelete")
     public JSONObject deletePatient(@RequestParam("id") String id){
         JSONObject response = new JSONObject();
+        if(id==null||id.equals("")) {
+            response.put("code",500);
+            response.put("message","用户不存在");
+        }
         patientService.deletePatient(id);
         response.put("code",200);
         response.put("message","删除成功");
@@ -57,7 +61,6 @@ public class PatientController extends ExceptionResponse {
     public JSONObject updatePatient (Patient patient){
         JSONObject response = new JSONObject();
         patientService.updatePatient(patient);
-
         response.put("code",200);
         response.put("message","更新成功");
         return response;
