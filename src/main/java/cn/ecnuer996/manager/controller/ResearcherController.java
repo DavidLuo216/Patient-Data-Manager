@@ -75,10 +75,20 @@ public class ResearcherController extends ExceptionResponse {
     public JSONObject findResearchers(Researcher researcher){
         JSONObject response = new JSONObject();
         JSONObject data = new JSONObject();
+        response.put("data",data);
         List<Researcher> researcherList = researcherService.findByExample(researcher);
 //        List<Researcher> researcherList = researcherService.findAll();
-        data.put("researcherList",researcherList);
-        response.put("data",data);
+        for(Researcher r : researcherList){
+            JSONObject tmp = new JSONObject();
+            String string = r.getName();
+            tmp.put("name",r.getName());
+            tmp.put("roles",r.getRoles());
+            tmp.put("registerTime",r.getRegisterTime());
+            tmp.put("lastLoginTime",r.getLastLoginTime());
+            tmp.put("isProhibited",r.isProhibited());
+            data.put(string,tmp);
+        }
+//        data.put("researcherList",researcherList);
         response.put("code",200);
         response.put("message","请求成功");
         return response;
