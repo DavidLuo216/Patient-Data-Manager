@@ -64,6 +64,7 @@ public class ResearcherServiceImpl implements ResearcherService {
 
     @Override
     public List<Researcher> findByExample(Researcher researcher) {
-        return researcherDao.findByExample(researcher);
+        return researcherDao.findResearcher(researcher);
+//        return researcherDao.findByExample(researcher);
     }
 }

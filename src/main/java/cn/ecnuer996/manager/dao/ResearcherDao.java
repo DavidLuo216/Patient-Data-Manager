@@ -61,6 +61,38 @@ public class ResearcherDao {
         return researcherList;
     }
 
+
+    public List<Researcher> findResearcher(Researcher researcher){
+        Criteria criteria = new Criteria();
+        Query query = new Query();
+
+        String name = researcher.getName();
+        List<String> roles = researcher.getRoles();
+        Boolean isProhibited = researcher.isProhibited();
+        String registerTime = researcher.getRegisterTime();
+        String lastLoginTime = researcher.getLastLoginTime();
+        if(name!=null&&!name.equals("")){
+            criteria.and("name").is(name);
+        }
+        if(roles!=null){
+            criteria.and("roles").is(roles);
+        }
+//        if(isProhibited!=null){
+//            criteria.and("name").is(name);
+//        }
+        if(registerTime!=null&&!registerTime.equals("")){
+            criteria.and("registerTime").is(registerTime);
+        }
+        if(lastLoginTime!=null&&!lastLoginTime.equals("")){
+            criteria.and("lastLoginTime").is(lastLoginTime);
+        }
+        query.addCriteria(criteria);
+
+
+        return mongoTemplate.find(query,Researcher.class,"researcher");
+
+    }
+
 }
 
 

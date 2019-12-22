@@ -33,7 +33,7 @@ public class ResearcherController extends ExceptionResponse {
         data.put("roles",researcher.getRoles());
         data.put("registerTime",researcher.getRegisterTime());
         data.put("lastLoginTime",researcher.getLastLoginTime());
-        data.put("prohibited",researcher.isProhibited());
+        data.put("isProhibited",researcher.isProhibited());
         response.put("code",200);
         response.put("message","请求成功");
         return response;
@@ -52,18 +52,33 @@ public class ResearcherController extends ExceptionResponse {
 //        return response;
 //    }
 
+
+    @GetMapping(value = "/researchers")
+    public JSONObject findAll(Researcher researcher){
+        JSONObject response = new JSONObject();
+        JSONObject data = new JSONObject();
+        List<Researcher> researcherList = researcherService.findAll();
+        data.put("researcherList",researcherList);
+        response.put("data",data);
+        response.put("code",200);
+        response.put("message","请求成功");
+        return response;
+    }
+
+
     /**
      * 多字段查询
      * @param researcher
      * @return
      */
-    @GetMapping(value = "/researchers")
+    @GetMapping(value = "/find-researcher")
     public JSONObject findResearchers(Researcher researcher){
         JSONObject response = new JSONObject();
         JSONObject data = new JSONObject();
-        response.put("data",data);
         List<Researcher> researcherList = researcherService.findByExample(researcher);
+//        List<Researcher> researcherList = researcherService.findAll();
         data.put("researcherList",researcherList);
+        response.put("data",data);
         response.put("code",200);
         response.put("message","请求成功");
         return response;
