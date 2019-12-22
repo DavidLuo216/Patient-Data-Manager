@@ -1,24 +1,19 @@
 package cn.ecnuer996.manager.controller;
 
-import cn.ecnuer996.manager.dao.PatientDao;
-import cn.ecnuer996.manager.error.BusinessException;
-import cn.ecnuer996.manager.error.ErrorEm;
 import cn.ecnuer996.manager.error.ExceptionResponse;
-import cn.ecnuer996.manager.error.SystemMessage;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.service.PatientService;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.BindingResultUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class PatientController extends ExceptionResponse {
 
@@ -73,20 +68,23 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
-    //多字段查询
+    /**
+     * 多字段查询
+     * @param patient
+     * @return
+     */
     @GetMapping(value="/find-patient")
-    public JSONArray findPatient(Patient patient){
-//        List<Patient> patientList = patientService.findPatient(patient.getId(),patient.getName(),patient.getBirthday(),
-//                patient.getGender(),patient.getPhone(),patient.getAddress());
+    public JSONObject findPatient(Patient patient){
+        //response是这个api返回给前端的整个JSON对象
+        JSONObject response=new JSONObject();
+        //data也是一个JSON对象，保存的是数据库的查询结果，这里data中保存一个Patient对象列表
+        JSONObject data=new JSONObject();
+        response.put("data",data);
         List<Patient> patientList=patientService.findByExample(patient);
-        JSONArray response = new JSONArray();
-        for(Patient p : patientList){
-            JSONObject tempJO = new JSONObject();
-            tempJO.put("patient",p);
-            response.add(tempJO);
-        }
-//        JSONArray response = new JSONArray();
-//        response.parseArray(JSON.toJSONString(patientList));
+        data.put("patientList",patientList);
+        //状态码，200是成功，其他可自定义（如500表示查询失败）
+        response.put("code",200);
+        response.put("message","请求成功");
         return response;
     }
 
