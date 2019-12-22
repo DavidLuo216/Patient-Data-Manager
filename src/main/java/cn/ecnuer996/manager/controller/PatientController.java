@@ -76,8 +76,9 @@ public class PatientController extends ExceptionResponse {
     //多字段查询
     @GetMapping(value="/find-patient")
     public JSONArray findPatient(Patient patient){
-        List<Patient> patientList = patientService.findPatient(patient.getId(),patient.getName(),patient.getBirthday(),
-                patient.getGender(),patient.getPhone(),patient.getAddress());
+//        List<Patient> patientList = patientService.findPatient(patient.getId(),patient.getName(),patient.getBirthday(),
+//                patient.getGender(),patient.getPhone(),patient.getAddress());
+        List<Patient> patientList=patientService.findByExample(patient);
         JSONArray response = new JSONArray();
         for(Patient p : patientList){
             JSONObject tempJO = new JSONObject();

@@ -51,6 +51,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public List<Patient> findByExample(Patient patient) {
+        return patientDao.findByExample(patient);
+    }
+
+    @Override
     public int updatePatient(Patient patient) {
         String id = patient.getId();
         String name = patient.getName();
