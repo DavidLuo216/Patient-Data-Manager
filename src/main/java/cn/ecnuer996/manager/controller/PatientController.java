@@ -5,13 +5,13 @@ import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.service.PatientService;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -21,11 +21,29 @@ public class PatientController extends ExceptionResponse {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping(value="/patient/{id}")
-    public JSONObject getPatient(@PathVariable(value = "id") String id){
+    @GetMapping(value="/patient")
+    public JSONObject getPatient(@RequestParam String id){
         JSONObject response=new JSONObject();
+        JSONObject data=new JSONObject();
         Patient patient =patientService.getPatientByID(id);
-        response.put("patient",patient);
+        Diagnose firstDiagnose=null;
+        List<String> checkDates=null;
+        if(patient!=null){
+            List<Diagnose> diagnoses=patient.getDiagnose();
+            if(diagnoses!=null){
+                firstDiagnose=patient.getDiagnose().get(0);
+                checkDates=new ArrayList<>();
+                for(int i=0;i<diagnoses.size();++i){
+                    checkDates.add(diagnoses.get(i).getDate());
+                }
+            }
+        }
+        data.put("patient",patient);
+        data.put("firstDiagnose",firstDiagnose);
+        data.put("checkDates",checkDates);
+        response.put("data",data);
+        response.put("code",200);
+        response.put("message","请求成功");
         return response;
     }
 
@@ -57,33 +75,14 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
-    //
-    @PutMapping(value = "/patient")
+    @PutMapping(value = "/patientUpdate")
     public JSONObject updatePatient (Patient patient){
         JSONObject response = new JSONObject();
         patientService.updatePatient(patient);
         response.put("code",200);
         response.put("message","更新成功");
         return response;
-
-//        if(result==1)
-//        return "Updated successfully!";
-//            return"Failed";
         }
-
-//    @GetMapping(value="/patients")
-//    public JSONArray getAllPatients(){
-//        List<Patient> patientList = patientService.findAll();
-//        JSONArray response = new JSONArray();
-//        for(Patient p : patientList){
-//            JSONObject tempJO= new JSONObject();
-//            tempJO.put("patient",p);
-//            response.add(tempJO);
-//        }
-//        response.parseArray(JSON.toJSONString(patientList));
-//        JSONArray response = JSONArray.parseArray(JSON.toJSONString(patientList));
-//        return response;
-//    }
 
     /**
      * 多字段查询
