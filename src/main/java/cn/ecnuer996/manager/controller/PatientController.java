@@ -30,43 +30,56 @@ public class PatientController extends ExceptionResponse {
 
 //参数要到body中传入 (mongo中会多一个_class字段)
     @PostMapping(value="/patientAdd")
-    public String addPatient(@Valid Patient patient, BindingResult bindingResult){
+    public JSONObject addPatient(@Valid Patient patient, BindingResult bindingResult){
+        JSONObject response = new JSONObject();
         if(bindingResult.hasErrors()){
-            return bindingResult.getFieldError().getDefaultMessage();
+            response.put("code",500);
+            response.put("message",bindingResult.getFieldError().getDefaultMessage());
         }
         patientService.savePatient(patient);
-        return"Added successfully!";
+        response.put("code","200");
+        response.put("message","添加成功");
+        return response;
     }
 
 //    删除
     @PostMapping(value = "/patientDelete")
-    public String deletePatient(@RequestParam("id") String id){
+    public JSONObject deletePatient(@RequestParam("id") String id){
+        JSONObject response = new JSONObject();
         patientService.deletePatient(id);
-        return "Deleted successfully!";
+        response.put("code",200);
+        response.put("message","删除成功");
+        return response;
     }
 
     //
     @PutMapping(value = "/patient")
-    public String updatePatient (Patient patient){
+    public JSONObject updatePatient (Patient patient){
+        JSONObject response = new JSONObject();
         patientService.updatePatient(patient);
+
+        response.put("code",200);
+        response.put("message","更新成功");
+        return response;
+
 //        if(result==1)
-        return "Updated successfully!";
+//        return "Updated successfully!";
 //            return"Failed";
         }
 
-    @GetMapping(value="/patients")
-    public JSONArray getAllPatients(){
-        List<Patient> patientList = patientService.findAll();
-        JSONArray response = new JSONArray();
-        for(Patient p : patientList){
-            JSONObject tempJO= new JSONObject();
-            tempJO.put("patient",p);
-            response.add(tempJO);
-        }
+//    @GetMapping(value="/patients")
+//    public JSONArray getAllPatients(){
+//        List<Patient> patientList = patientService.findAll();
+//        JSONArray response = new JSONArray();
+//        for(Patient p : patientList){
+//            JSONObject tempJO= new JSONObject();
+//            tempJO.put("patient",p);
+//            response.add(tempJO);
+//        }
 //        response.parseArray(JSON.toJSONString(patientList));
 //        JSONArray response = JSONArray.parseArray(JSON.toJSONString(patientList));
-        return response;
-    }
+//        return response;
+//    }
 
     /**
      * 多字段查询
