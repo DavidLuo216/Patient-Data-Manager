@@ -1,18 +1,14 @@
 package cn.ecnuer996.manager.controller;
 
-import cn.ecnuer996.manager.dao.ResearcherDao;
 import cn.ecnuer996.manager.error.ExceptionResponse;
-import cn.ecnuer996.manager.error.ProdProcessOrderException;
 import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.service.ResearcherService;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 

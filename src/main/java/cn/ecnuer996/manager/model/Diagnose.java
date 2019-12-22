@@ -4,12 +4,21 @@ import java.util.List;
 
 public class Diagnose {
     private String date;
+    private String hospital;
     private CheckInfo checkInfo;
     private DiagnoseResult diagnoseResult;
     private List<Medication> medication;
 
     public String getDate() {
         return date;
+    }
+
+    public String getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
     }
 
     public void setDate(String date) {
