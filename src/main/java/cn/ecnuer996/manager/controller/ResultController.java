@@ -29,8 +29,15 @@ public class ResultController {
         return response;
     }
 
+    /**
+     * result导入 （body中传JSON）
+     * headers：Content_type : application/json
+     * @param result
+     * @param bindingResult
+     * @return
+     */
     @PostMapping(value="/resultAdd")
-    public JSONObject addResult(@Valid Result result, BindingResult bindingResult){
+    public JSONObject addResult(@Valid @RequestBody Result result, BindingResult bindingResult){
         JSONObject response = new JSONObject();
         if(bindingResult.hasErrors()){
             response.put("code",500);
