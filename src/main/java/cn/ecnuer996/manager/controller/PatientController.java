@@ -27,14 +27,16 @@ public class PatientController extends ExceptionResponse {
         JSONObject data=new JSONObject();
         Patient patient =patientService.getPatientByID(id);
         Diagnose firstDiagnose=null;
-        List<String> checkDates=null;
+        List<JSONObject> checkDates=null;
         if(patient!=null){
             List<Diagnose> diagnoses=patient.getDiagnose();
             if(diagnoses!=null){
                 firstDiagnose=patient.getDiagnose().get(0);
                 checkDates=new ArrayList<>();
                 for(int i=0;i<diagnoses.size();++i){
-                    checkDates.add(diagnoses.get(i).getDate());
+                    JSONObject date=new JSONObject();
+                    date.put("value",diagnoses.get(i).getDate());
+                    checkDates.add(date);
                 }
             }
         }
@@ -56,7 +58,7 @@ public class PatientController extends ExceptionResponse {
      * @return
      */
     @PostMapping(value="/patientAdd")
-    public JSONObject addPatient(@Valid Patient patient, BindingResult bindingResult){
+    public JSONObject addPatient(@Valid @RequestBody Patient patient, BindingResult bindingResult){
         JSONObject response = new JSONObject();
         if(bindingResult.hasErrors()){
             response.put("code",500);
