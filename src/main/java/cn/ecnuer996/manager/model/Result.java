@@ -1,13 +1,24 @@
 package cn.ecnuer996.manager.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class Result {
+    @NotBlank(message = "请填写信息")
     private  String _id;
+    @NotBlank(message = "请填写信息")
     private String researcher;
+    @NotBlank(message = "请填写信息")
     private String patientId;
+    @NotBlank(message = "请填写信息")
     private String checkDate;
+    @NotBlank(message = "请填写信息")
     private String processDate;
+    @NotNull(message = "请填写算法")
     private Algorithm algorithm;
+    @NotNull(message = "请填写shrink")
     private ResultData shrink;
+    @NotNull(message = "请填stretch")
     private ResultData stretch;
 
     public Result() {
