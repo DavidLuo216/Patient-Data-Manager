@@ -32,19 +32,24 @@ public class ResearcherServiceImpl implements ResearcherService {
     }
 
     @Override
-    public void updateResearcher(Researcher researcher) {
+    public void updateResearcherInfo(Researcher researcher) {
         String name = researcher.getName();
         String password = researcher.getPassword();
         List<String> roles = researcher.getRoles();
-        boolean isProhibited;
+//        boolean isProhibited;
 
         if (name == null || name.equals("")) {
             throw new ProdProcessOrderException("用户名为空");
         }
-        if (password == null || password.equals("")) {
-            throw new ProdProcessOrderException("密码为空");
-        }
-            researcherDao.updateResearcher(researcher);
+//        if (password == null || password.equals("")) {
+//            throw new ProdProcessOrderException("密码为空");
+//        }
+            researcherDao.updateResearcherInfo(researcher);
+    }
+
+    @Override
+    public void updateIsProhibited(Researcher researcher,Boolean bool){
+        researcherDao.updateIsProhibited(researcher,bool);
     }
 
     @Override

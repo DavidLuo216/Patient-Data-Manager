@@ -48,6 +48,13 @@ public class PatientController extends ExceptionResponse {
     }
 
 //参数要到body中传入 (mongo中会多一个_class字段)
+
+    /**
+     * 基本信息
+     * @param patient
+     * @param bindingResult
+     * @return
+     */
     @PostMapping(value="/patientAdd")
     public JSONObject addPatient(@Valid Patient patient, BindingResult bindingResult){
         JSONObject response = new JSONObject();
@@ -75,6 +82,11 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
+    /**
+     * 更新基本信息
+     * @param patient
+     * @return
+     */
     @PutMapping(value = "/patientUpdate")
     public JSONObject updatePatient (Patient patient){
         JSONObject response = new JSONObject();
@@ -115,10 +127,19 @@ public class PatientController extends ExceptionResponse {
      * @param diagnose
      * @return
      */
-    @PatchMapping(value = "/patient/{id}")
+    @PatchMapping(value = "/patient/{id}/diagnose")
     public JSONObject addDiagnose(@PathVariable(value = "id")String id,Diagnose diagnose){
         JSONObject response = new JSONObject();
         patientService.addDiagnose(id,diagnose);
+        response.put("code",200);
+        response.put("message","添加成功");
+        return response;
+    }
+
+    @PatchMapping(value = "/patient/{id}/history")
+    public JSONObject addDiagnose(@PathVariable(value = "id")String id,History history){
+        JSONObject response = new JSONObject();
+        patientService.addHistory(id,history);
         response.put("code",200);
         response.put("message","添加成功");
         return response;

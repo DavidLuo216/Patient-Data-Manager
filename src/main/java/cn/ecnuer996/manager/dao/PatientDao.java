@@ -79,10 +79,17 @@ public class PatientDao {
         return mongoTemplate.findAll(Patient.class);
     }
 
-    //添加诊疗信息
+    //添加单条诊疗信息进列表
     public void updateDiagnoseList(Patient patient, List<Diagnose> diagnoseList){
         Query query = new Query(Criteria.where("_id").is(patient.getId()));
         Update update = new Update().set("diagnose",diagnoseList);
+        mongoTemplate.updateFirst(query,update,Patient.class);
+    }
+
+    //添加单条病史进病史列表
+    public void updateHistoryList(Patient patient, List<History> historyList){
+        Query query = new Query(Criteria.where("_id").is(patient.getId()));
+        Update update = new Update().set("history",historyList);
         mongoTemplate.updateFirst(query,update,Patient.class);
     }
 

@@ -59,6 +59,8 @@ public interface PatientService {
 
     void addDiagnose(String id, Diagnose diagnose);
 
+    void addHistory(String id, History history);
+
 
 
 }

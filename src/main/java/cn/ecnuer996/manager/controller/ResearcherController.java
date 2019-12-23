@@ -3,7 +3,6 @@ package cn.ecnuer996.manager.controller;
 import cn.ecnuer996.manager.error.ExceptionResponse;
 import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.service.ResearcherService;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -129,10 +128,50 @@ public class ResearcherController extends ExceptionResponse {
     @PutMapping(value = "/researcher")
     public JSONObject updateResearcher(Researcher researcher){
         JSONObject response = new JSONObject();
-        researcherService.updateResearcher(researcher);
+        researcherService.updateResearcherInfo(researcher);
         response.put("code",200);
         response.put("message","更新成功");
+
         return response;
+
     }
+
+//    /**
+//     * 解禁某用户
+//     */
+//    @PatchMapping(value = "/researcher/unban")
+//    public JSONObject deProhibited(@RequestParam String name){
+//        JSONObject response = new JSONObject();
+//        Researcher researcher = researcherService.getResearcher(name);
+//        if(!researcher.isProhibited()){
+//            response.put("code",500);
+//            response.put("message","用户未被封禁");
+//            return response;
+//        }
+//        researcherService.updateIsProhibited(researcher,false);
+//        response.put("code",200);
+//        response.put("message","解禁成功");
+//        return response;
+//    }
+//
+//    /**
+//     * 封禁某用户
+//     */
+//    @PatchMapping(value = "/researcher/ban")
+//    public JSONObject prohibited(@RequestParam String name){
+//        JSONObject response = new JSONObject();
+//        Researcher researcher = researcherService.getResearcher(name);
+//        if(researcher.isProhibited()){
+//            response.put("code",500);
+//            response.put("message","用户已经被封禁");
+//            return response;
+//        }
+//        researcherService.updateIsProhibited(researcher,true);
+//        response.put("code",200);
+//        response.put("message","封禁成功");
+//        return response;
+//    }
+
+
 
 }

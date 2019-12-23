@@ -25,7 +25,7 @@ public interface ResearcherService {
      * 更新
      * @param researcher
      */
-    public void updateResearcher(Researcher researcher);
+    public void updateResearcherInfo(Researcher researcher);
 
     /**
      * 添加
@@ -52,5 +52,7 @@ public interface ResearcherService {
      * @return
      */
     List<Researcher> findByExample(Researcher researcher);
+
+    void updateIsProhibited(Researcher researcher,Boolean bool);
 
 }

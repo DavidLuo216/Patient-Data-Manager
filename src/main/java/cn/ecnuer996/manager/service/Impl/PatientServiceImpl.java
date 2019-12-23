@@ -118,4 +118,20 @@ public class PatientServiceImpl implements PatientService {
 //        }
 //        patientDao.addHistory(patient,history);
     }
+
+    @Override
+    public void addHistory(String id, History history) {
+        Patient patient = patientDao.findPatientByID(id);
+        List<History> historyList = patient.getHistory();
+        historyList.add(history);
+        patientDao.updateHistoryList(patient,historyList);
+
+//        if(disease == null||disease.equals("")){
+//            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请填写病症");
+//        }
+//        if(details == null||details.equals("")){
+//            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请描述细节");
+//        }
+//        patientDao.addHistory(patient,history);
+    }
 }

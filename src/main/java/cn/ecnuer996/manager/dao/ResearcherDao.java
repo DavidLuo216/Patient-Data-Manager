@@ -40,11 +40,32 @@ public class ResearcherDao {
     }
 
     //update
-    public void updateResearcher(Researcher researcher){
+    public void updateResearcherInfo(Researcher researcher){
         Query query=new Query(Criteria.where("name").is(researcher.getName()));
-        Update update=new Update()//.set("name",researcher.getName())
-                .set("password",researcher.getPassword()).set("roles",researcher.getRoles())
-                .set("prohibited",String.valueOf(researcher.isProhibited()));
+        Update update = new Update();
+//        Researcher researcherOrigin = findResearcherByName(researcher.getName());
+//        update.set("name",researcher.getName())
+//                .set("password",researcher.getPassword())
+//                .set("roles",researcher.getRoles())
+//                .set("isProhibited",researcher.isProhibited());
+        if(researcher.getPassword()!=null&&!researcher.getPassword().equals("")){
+            update.set("password",researcher.getPassword());
+        }
+        if(researcher.getRoles()!=null&&!researcher.getRoles().isEmpty()){
+            update.set("roles",researcher.getRoles());
+        }
+//        boolean temp = researcher.isProhibited();
+
+        update.set("isProhibited",researcher.isProhibited());
+//        if(!researcher.isProhibited()){
+//            update.set("isProhibited",true);
+//        }
+        mongoTemplate.updateFirst(query,update,Researcher.class);
+    }
+
+    public void updateIsProhibited(Researcher researcher,boolean bool){
+        Query query=new Query(Criteria.where("name").is(researcher.getName()));
+        Update update = new Update().set("isProhibited",bool);
         mongoTemplate.updateFirst(query,update,Researcher.class);
     }
 
@@ -86,6 +107,7 @@ public class ResearcherDao {
         if(lastLoginTime!=null&&!lastLoginTime.equals("")){
             criteria.and("lastLoginTime").is(lastLoginTime);
         }
+        criteria.and("isProhibited").is(isProhibited);
         query.addCriteria(criteria);
 
 
