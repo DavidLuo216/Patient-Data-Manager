@@ -56,7 +56,7 @@ public class PatientController extends ExceptionResponse {
      * @return
      */
     @PostMapping(value="/patientAdd")
-    public JSONObject addPatient(@Valid Patient patient, BindingResult bindingResult){
+    public JSONObject addPatient(@Valid @RequestBody Patient patient, BindingResult bindingResult){
         JSONObject response = new JSONObject();
         if(bindingResult.hasErrors()){
             response.put("code",500);
@@ -137,20 +137,20 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
-    /**
-     * 添加病史（单条）
-     * @param id
-     * @param history
-     * @return
-     */
-    @PatchMapping(value = "/patient/{id}/history")
-    public JSONObject addHistory(@PathVariable(value = "id")String id,History history){
-        JSONObject response = new JSONObject();
-        patientService.addHistory(id,history);
-        response.put("code",200);
-        response.put("message","添加成功");
-        return response;
-    }
+//    /**
+//     * 添加病史（单条）
+//     * @param id
+//     * @param history
+//     * @return
+//     */
+//    @PostMapping(value = "/patient/{id}/history")
+//    public JSONObject addHistory(@PathVariable(value = "id")String id,@Valid History history){
+//        JSONObject response = new JSONObject();
+//        patientService.addHistory(id,history);
+//        response.put("code",200);
+//        response.put("message","添加成功");
+//        return response;
+//    }
 
 
 }

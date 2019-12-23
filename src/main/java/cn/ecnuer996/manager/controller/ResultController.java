@@ -59,6 +59,18 @@ public class ResultController {
         return response;
     }
 
+    @GetMapping(value = "/results")
+    public JSONObject findAllResults(){
+        JSONObject response = new JSONObject();
+        JSONObject data = new JSONObject();
+        List<Result> resultList = resultService.findAll();
+        data.put("resultList",resultList);
+        response.put("data",data);
+        response.put("code",200);
+        response.put("message","请求成功");
+        return response;
+    }
+
     @GetMapping(value = "/find-result")
     public JSONObject findResults(Result result){
         JSONObject response = new JSONObject();
@@ -76,8 +88,17 @@ public class ResultController {
         return response;
     }
 
-    @PutMapping(value = "/result")
-    public JSONObject updateResult(Result result){
-        return null;
+    @PostMapping(value = "/resultUpdate")
+    public JSONObject updateResult(@Valid @RequestBody Result result,BindingResult bindingResult){
+        JSONObject response = new JSONObject();
+        if(bindingResult.hasErrors()){
+            response.put("code",500);
+            response.put("message",bindingResult.getFieldError().getDefaultMessage());
+            return response;
+        }
+        resultService.saveResult(result);
+        response.put("code",200);
+        response.put("message","添加成功");
+        return response;
     }
 }

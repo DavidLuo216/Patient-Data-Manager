@@ -49,7 +49,7 @@ public class ResearcherController extends ExceptionResponse {
 
 
     @GetMapping(value = "/researchers")
-    public JSONObject findAll(Researcher researcher){
+    public JSONObject findAll(){
         JSONObject response = new JSONObject();
         JSONObject data = new JSONObject();
         List<Researcher> researcherList = researcherService.findAll();
