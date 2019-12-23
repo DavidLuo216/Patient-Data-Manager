@@ -3,6 +3,7 @@ package cn.ecnuer996.manager.controller;
 import cn.ecnuer996.manager.dao.ResultDao;
 import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.model.Result;
+import cn.ecnuer996.manager.service.ResultService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -16,12 +17,12 @@ import java.util.List;
 public class ResultController {
 
     @Autowired
-    private ResultDao resultDao;
+    private ResultService resultService;
 
     @GetMapping(value="/result/{_id}")
     public JSONObject getResult(@PathVariable("_id") String id){
         JSONObject response=new JSONObject();
-        Result result =resultDao.findResultByID(id);
+        Result result =resultService.getResultByID(id);
         response.put("result",result);
         response.put("code",200);
         response.put("message","请求成功");
@@ -36,7 +37,7 @@ public class ResultController {
             response.put("message",bindingResult.getFieldError().getDefaultMessage());
             return response;
         }
-        resultDao.saveResult(result);
+        resultService.saveResult(result);
         response.put("code",200);
         response.put("message","添加成功");
         return response;
@@ -45,7 +46,7 @@ public class ResultController {
     @PostMapping(value = "/resultDelete")
     public  JSONObject deleteResult(@RequestParam("_id")String id){
         JSONObject response = new JSONObject();
-        resultDao.deleteResultByID(id);
+        resultService.deleteResult(id);
         response.put("code",200);
         response.put("message","删除成功");
         return response;
@@ -55,7 +56,7 @@ public class ResultController {
     public JSONObject findResults(Result result){
         JSONObject response = new JSONObject();
         JSONObject data = new JSONObject();
-        List<Result> resultList = resultDao.findByExample(result);
+        List<Result> resultList = resultService.findResult(result);
         if(resultList.isEmpty()){
             response.put("code",500);
             response.put("message","无结果");

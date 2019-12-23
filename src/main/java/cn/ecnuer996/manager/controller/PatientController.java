@@ -122,13 +122,14 @@ public class PatientController extends ExceptionResponse {
     }
 
     /**
-     *  添加诊疗信息
+     *  添加诊疗信息（单条）
+     *  Header：Content-Type:application/json
      * @param id
      * @param diagnose
      * @return
      */
-    @PatchMapping(value = "/patient/{id}/diagnose")
-    public JSONObject addDiagnose(@PathVariable(value = "id")String id,Diagnose diagnose){
+    @PostMapping(value = "/patient/{id}/diagnose")
+    public JSONObject addDiagnose(@PathVariable(value = "id")String id,@RequestBody Diagnose diagnose){
         JSONObject response = new JSONObject();
         patientService.addDiagnose(id,diagnose);
         response.put("code",200);
@@ -136,8 +137,14 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
+    /**
+     * 添加病史（单条）
+     * @param id
+     * @param history
+     * @return
+     */
     @PatchMapping(value = "/patient/{id}/history")
-    public JSONObject addDiagnose(@PathVariable(value = "id")String id,History history){
+    public JSONObject addHistory(@PathVariable(value = "id")String id,History history){
         JSONObject response = new JSONObject();
         patientService.addHistory(id,history);
         response.put("code",200);
