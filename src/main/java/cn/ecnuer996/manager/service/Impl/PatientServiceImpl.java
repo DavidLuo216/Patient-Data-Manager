@@ -265,8 +265,9 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void addFileIdToLists(String fileId, String type,Diagnose diagnose) {
         CheckInfo checkInfo = diagnose.getCheckInfo();
-        CheckFile diagnoseFiles = diagnose.getCheckInfo().getCheckFile();
-        CheckFile checkFile = new CheckFile();
+        CheckFile checkFile = diagnose.getCheckInfo().getCheckFile();
+        if(checkFile==null)
+            checkFile = new CheckFile();
         //空指针
 //        List<String> CTFiles = diagnoseFiles.getCT();
 //        List<String> CTImages = diagnoseFiles.getCTImage();
@@ -280,16 +281,16 @@ public class PatientServiceImpl implements PatientService {
 //                diagnoseFiles.setCT(CTFiles);
 //                break;
             case "CTImage":
-                List<String> imageList = new ArrayList<>();
+                List<String> imageList = checkFile.getCTImage();
                 imageList.add(fileId);
-                checkFile.setCT(imageList);
+                checkFile.setCTImage(imageList);
                 break;
 //            case "CTPAImage":
 //                CTPAImages.add(fileId);
 //                diagnoseFiles.setCT(CTPAImages);
 //                break;
             case "CTPAMp4":
-                List<String> mp4List = new ArrayList<>();
+                List<String> mp4List = checkFile.getCTPAMp4();
                 mp4List.add(fileId);
                 checkFile.setCTPAMp4(mp4List);
                 break;

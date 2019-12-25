@@ -134,7 +134,7 @@ public class PatientController extends ExceptionResponse {
         }
 
     /**
-     * 多字段查询
+     * 多字段查询/也可填写空参数获取所有Patient
      * @param patient
      * @return
      */
