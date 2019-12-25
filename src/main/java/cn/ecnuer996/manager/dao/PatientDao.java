@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Component
@@ -19,11 +20,15 @@ public class PatientDao {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    // insert
+    // insert单条
     public Patient savePatient(Patient patient){
         return mongoTemplate.save(patient);
     }
 
+    //列表导入
+    public List<Patient> insertPatientList(List<Patient> patientList){
+        return (List<Patient>)mongoTemplate.insert(patientList,Patient.class);
+    }
     // get by id
     public Patient findPatientByID(String id){
         Query query=new Query(Criteria.where("_id").is(id));

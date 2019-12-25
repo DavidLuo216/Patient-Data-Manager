@@ -96,6 +96,17 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
+    /**
+     * 通过csv批量导入
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
+    @PostMapping(value = "/patientAddCsv")
+    public JSONObject addPatientCsv(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+        return patientService.insertByCsv(multipartFile);
+    }
+
 //    删除
     @PostMapping(value = "/patientDelete")
     public JSONObject deletePatient(@RequestParam("id") String id){

@@ -7,6 +7,10 @@ import cn.ecnuer996.manager.error.ProdProcessOrderException;
 import cn.ecnuer996.manager.model.*;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
+import de.siegmar.fastcsv.reader.CsvContainer;
+import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.reader.CsvRow;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,7 +18,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -36,6 +46,61 @@ public class PatientServiceImpl implements PatientService {
 //        }
         return patientDao.savePatient(patient);
     }
+
+    @Override
+    public JSONObject insertByCsv(MultipartFile file) throws IOException {
+        CsvReader csvReader = new CsvReader();
+        if(file==null||file.getOriginalFilename()==null||file.getOriginalFilename().equals("")){
+            throw new ProdProcessOrderException("文件(名)不可为空");
+        }
+        File fileUse = new File(file.getOriginalFilename());
+        FileUtils.copyInputStreamToFile(file.getInputStream(), fileUse);
+
+        List<Patient> patientList = new ArrayList<>();
+
+        CsvContainer csv = csvReader.read(fileUse, StandardCharsets.UTF_8);
+        for(CsvRow row : csv.getRows()){
+            if(row.getOriginalLineNumber()!=1) {
+                Patient patient =new Patient();
+                patient.setId(row.getField(0));
+                patient.setName(row.getField(1));
+                patient.setBirthday(row.getField(2));
+                patient.setGender(row.getField(3));
+                patient.setPhone(row.getField(4));
+                patient.setAddress(row.getField(5));
+                List<History> histories = new ArrayList<>();
+
+                String histroyString = row.getField(6);
+                String historyString1 = histroyString.substring(1,histroyString.indexOf("]"));
+                String [] histroyStringArr = historyString1.split("},");
+                for(int i =0;i<histroyStringArr.length-1;i++){
+                    histroyStringArr[i] = histroyStringArr[i] + "}";
+                }
+                for(String historyItem : histroyStringArr){
+                    JSONObject tmp = JSONObject.parseObject(historyItem);
+                    History history = new History();
+                    history.setDisease((String) tmp.get("disease"));
+                    history.setDetails((String)tmp.get("details"));
+                    histories.add(history);
+                }
+                patient.setHistory(histories);
+                patientList.add(patient);
+            }
+        }
+
+
+        JSONObject response = new JSONObject();
+        patientDao.insertPatientList(patientList);
+        response.put("CountOfInsertion",patientList.size());
+        response.put("patientList",patientList);
+        response.put("code",200);
+        response.put("message","成功导入"+patientList.size()+"条记录！");
+
+
+        File del = new File(fileUse.toURI()); //删除项目产生的临时文件
+        del.delete();
+        return response;
+     }
 
     @Override
     public void deletePatient(String id) {
