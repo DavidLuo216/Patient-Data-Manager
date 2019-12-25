@@ -2,10 +2,7 @@ package cn.ecnuer996.manager.controller;
 
 import cn.ecnuer996.manager.error.ExceptionResponse;
 import cn.ecnuer996.manager.error.ProdProcessOrderException;
-import cn.ecnuer996.manager.model.CheckFile;
-import cn.ecnuer996.manager.model.Diagnose;
-import cn.ecnuer996.manager.model.History;
-import cn.ecnuer996.manager.model.Patient;
+import cn.ecnuer996.manager.model.*;
 import cn.ecnuer996.manager.service.GridFsService;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
@@ -30,6 +27,7 @@ import java.io.InputStream;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -169,7 +167,7 @@ public class PatientController extends ExceptionResponse {
     }
 
     /**
-     *  添加诊疗信息（单条）
+     *  添加诊疗信息的文字基本信息（单条）
      *  Header：Content-Type:application/json
      * @param id
      * @param diagnose
@@ -177,26 +175,30 @@ public class PatientController extends ExceptionResponse {
      */
     @PostMapping(value = "/patient/{id}/diagnoseInfo")
     public JSONObject addDiagnoseInfo(@PathVariable(value = "id")String id,
-                                  @RequestBody Diagnose diagnose,
-                                  @RequestParam("files") List<Map<String,Object>> filesWithType){
+                                  @RequestBody Diagnose diagnose){
         JSONObject response = new JSONObject();
 
 
 //        List<> files = (List<MultipartFile>) filesWithType.get("files");
-        for(Map<String,Object> m : filesWithType ){
-            MultipartFile file = (MultipartFile) m.get("file");
-            Object upLoadResult = gridFsService.uploadData(file);
-            if(!upLoadResult.toString().equals("upload fail")){
-                Map params = (Map)upLoadResult;
-                String fileId = (String) params.get("id");
+//        for(Map<String,Object> m : filesWithType ){
+//            MultipartFile file = (MultipartFile) m.get("file");
+//            Object upLoadResult = gridFsService.uploadData(file);
+//            if(!upLoadResult.toString().equals("upload fail")){
+//                Map params = (Map)upLoadResult;
+//                String fileId = (String) params.get("id");
+//
+//                String type = (String) m.get("type");
+//
+//                patientService.addFileIdToLists(fileId,type,diagnose);
+//
+//            }
+//            else{
+//                response.put("code",500);
+//                response.put("message","上传失败");
+//                return response;
+//            }
 
-                String type = (String) m.get("type");
-
-                patientService.addFileIdToLists(fileId,type,diagnose);
-
-            }
-            throw new ProdProcessOrderException("文件上传失败");
-        }
+//        }
 
         patientService.addDiagnose(id,diagnose);
         response.put("code",200);
@@ -204,34 +206,43 @@ public class PatientController extends ExceptionResponse {
         return response;
     }
 
-    @PostMapping(value = "/patient/{id}/diagnoseFile")
-    public JSONObject addDiagnoseFile(@PathVariable(value = "id")String id,
-                                      @RequestBody Diagnose diagnose,
-                                      @RequestParam("files") List<Map<String,Object>> filesWithType){
+    /**
+     * 上传图片
+     * @param id
+     * @param date
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/patient/{id}/diagnoseImage")
+    public JSONObject addDiagnoseImage(@PathVariable(value = "id")String id,
+                                       @RequestParam(value = "date")String date,
+                                       @RequestParam(value = "file") MultipartFile file){
         JSONObject response = new JSONObject();
-
+        JSONObject data = new JSONObject();
 
 //        List<> files = (List<MultipartFile>) filesWithType.get("files");
-        for(Map<String,Object> m : filesWithType ){
-            MultipartFile file = (MultipartFile) m.get("file");
-            Object upLoadResult = gridFsService.uploadData(file);
-            if(!upLoadResult.toString().equals("upload fail")){
-                Map params = (Map)upLoadResult;
-                String fileId = (String) params.get("id");
+        HashMap<String,Object> upLoadResult = gridFsService.uploadData(file);
 
-                String type = (String) m.get("type");
 
-                patientService.addFileIdToLists(fileId,type,diagnose);
+        String fileId = (String) upLoadResult.get("id");
 
-            }
-            throw new ProdProcessOrderException("文件上传失败");
-        }
+        String type = "CTImage";
 
-        patientService.addDiagnose(id,diagnose);
+        Diagnose diagnose = patientService.findDiagnoseByIdAndDate(id,date);
+
+        patientService.addFileIdToLists(fileId,type,diagnose);
+            //  此时diagnose已经成功添加上文件
+        patientService.updateDignose(id,diagnose);
         response.put("code",200);
         response.put("message","添加成功");
         return response;
-    }
+
+
+        }
+
+
+
+
 
 //    /**
 //     * 添加病史（单条）

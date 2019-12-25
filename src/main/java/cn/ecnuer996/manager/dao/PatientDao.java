@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.dao;
 
+import cn.ecnuer996.manager.error.ProdProcessOrderException;
 import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
@@ -98,6 +99,20 @@ public class PatientDao {
         Query query = new Query(Criteria.where("_id").is(patient.getId()));
         Update update = new Update().set("diagnose",diagnoseList);
         mongoTemplate.updateFirst(query,update,Patient.class);
+    }
+
+    //根据id和date定位唯一diagnose
+    public Diagnose findDiagnoseByIdAndDate(String id,String date){
+        Patient patient = mongoTemplate.findById(id,Patient.class);
+        if(patient==null){
+            throw new ProdProcessOrderException("病人ID不正确");
+        }
+        List<Diagnose> diagnoseList= patient.getDiagnose();
+        for(Diagnose d : diagnoseList){
+            if(d.getDate().equals(date))
+                return d;
+        }
+        throw new ProdProcessOrderException("病人ID或日期不正确");
     }
 
     //添加单条病史进病史列表

@@ -199,6 +199,9 @@ public class PatientServiceImpl implements PatientService {
     public void addDiagnose(String id, Diagnose diagnose) {
         Patient patient = patientDao.findPatientByID(id);
         List<Diagnose> diagnoseList = patient.getDiagnose();
+        if(diagnoseList==null){
+            diagnoseList = new ArrayList<>();
+        }
         diagnoseList.add(diagnose);
         patientDao.updateDiagnoseList(patient,diagnoseList);
 
@@ -212,6 +215,29 @@ public class PatientServiceImpl implements PatientService {
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请描述细节");
 //        }
 //        patientDao.addHistory(patient,history);
+    }
+
+    @Override
+    public void updateDignose(String id, Diagnose diagnose) {
+        Patient patient = patientDao.findPatientByID(id);
+        List<Diagnose> diagnoseList = new ArrayList<>();
+        diagnoseList = patient.getDiagnose();
+        if(diagnoseList.isEmpty())
+            addDiagnose(id,diagnose);
+        else{
+            Diagnose tmp = new Diagnose();
+            for(Diagnose d : diagnoseList){
+                if(d.getDate().equals(diagnose.getDate())) {
+                    tmp = d;
+                    }
+                else addDiagnose(id,diagnose);
+            }
+            int index = diagnoseList.indexOf(tmp);
+//            diagnoseList.remove(tmp);
+//            diagnoseList.add(diagnose);
+            diagnoseList.set(index,diagnose);
+            patientDao.updateDiagnoseList(patient,diagnoseList);
+        }
     }
 
     @Override
@@ -240,39 +266,48 @@ public class PatientServiceImpl implements PatientService {
     public void addFileIdToLists(String fileId, String type,Diagnose diagnose) {
         CheckInfo checkInfo = diagnose.getCheckInfo();
         CheckFile diagnoseFiles = diagnose.getCheckInfo().getCheckFile();
-        List<String> CTFiles = diagnoseFiles.getCT();
-        List<String> CTImages = diagnoseFiles.getCTImage();
-        List<String> CTPAImages = diagnoseFiles.getCTPA();
-        List<String> CTPAMp4 = diagnoseFiles.getCTPAMp4();
-        List<String> CTPAs = diagnoseFiles.getCTPA();
+        CheckFile checkFile = new CheckFile();
+        //空指针
+//        List<String> CTFiles = diagnoseFiles.getCT();
+//        List<String> CTImages = diagnoseFiles.getCTImage();
+//        List<String> CTPAImages = diagnoseFiles.getCTPA();
+//        List<String> CTPAMp4 = diagnoseFiles.getCTPAMp4();
+//        List<String> CTPAs = diagnoseFiles.getCTPA();
 
         switch(type){
-            case "CT":
-                CTFiles.add(fileId);
-                diagnoseFiles.setCT(CTFiles);
-                break;
+//            case "CT":
+//                CTFiles.add(fileId);
+//                diagnoseFiles.setCT(CTFiles);
+//                break;
             case "CTImage":
-                CTImages.add(fileId);
-                diagnoseFiles.setCT(CTImages);
+                List<String> imageList = new ArrayList<>();
+                imageList.add(fileId);
+                checkFile.setCT(imageList);
                 break;
-            case "CTPAImage":
-                CTPAImages.add(fileId);
-                diagnoseFiles.setCT(CTPAImages);
-                break;
+//            case "CTPAImage":
+//                CTPAImages.add(fileId);
+//                diagnoseFiles.setCT(CTPAImages);
+//                break;
             case "CTPAMp4":
-                CTPAMp4.add(fileId);
-                diagnoseFiles.setCT(CTPAMp4);
+                List<String> mp4List = new ArrayList<>();
+                mp4List.add(fileId);
+                checkFile.setCTPAMp4(mp4List);
                 break;
-            case "CTPA":
-                CTPAs.add(fileId);
-                diagnoseFiles.setCT(CTPAs);
-                break;
+//            case "CTPA":
+//                CTPAs.add(fileId);
+//                diagnoseFiles.setCT(CTPAs);
+//                break;
 
             default:
                 throw new ProdProcessOrderException("类型不正确");
         }
 
-        checkInfo.setCheckFile(diagnoseFiles);
+        checkInfo.setCheckFile(checkFile);
         diagnose.setCheckInfo(checkInfo);
+    }
+
+    @Override
+    public Diagnose findDiagnoseByIdAndDate(String id, String date) {
+        return patientDao.findDiagnoseByIdAndDate(id,date);
     }
 }

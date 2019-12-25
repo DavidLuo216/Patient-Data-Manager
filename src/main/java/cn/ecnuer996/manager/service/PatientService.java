@@ -69,9 +69,18 @@ public interface PatientService {
 
     void addDiagnose(String id, Diagnose diagnose);
 
+    void updateDignose(String id,Diagnose diagnose);
+
     void addHistory(String id, History history);
 
     void addFileIdToLists(String fileId,String type,Diagnose diagnose);
 
+    /**
+     * 根据id和日期返回唯一diagnose
+     * @param id
+     * @param date
+     * @return
+     */
+    Diagnose findDiagnoseByIdAndDate(String id,String date);
 
 }

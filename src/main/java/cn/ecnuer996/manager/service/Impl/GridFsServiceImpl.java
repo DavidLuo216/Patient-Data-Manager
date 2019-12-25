@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.service.Impl;
 
+import cn.ecnuer996.manager.error.ProdProcessOrderException;
 import cn.ecnuer996.manager.model.FileInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.*;
@@ -99,11 +100,11 @@ public class GridFsServiceImpl implements GridFsService {
     }
 
     @Override
-    public Object uploadData(MultipartFile file) {
+    public HashMap<String,Object> uploadData(MultipartFile file) {
         GridFSInputFile inputFile = this.save(file);
 
         if (inputFile == null) {
-            return "upload fail";
+            throw new ProdProcessOrderException("上传文件为空");
         }
         String id = inputFile.getId().toString();
         String md5 = inputFile.getMD5();
@@ -111,7 +112,7 @@ public class GridFsServiceImpl implements GridFsService {
         long length = inputFile.getLength();
 
 
-        Map<String, Object> dt = new HashMap<String, Object>();
+        HashMap<String, Object> dt = new HashMap<String, Object>();
         dt.put("id", id);
         dt.put("md5", md5);
         dt.put("name", name);

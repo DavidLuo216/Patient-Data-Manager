@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 
 public interface GridFsService {
@@ -26,7 +27,7 @@ public interface GridFsService {
      * @param file
      * @return
      */
-    Object uploadData(MultipartFile file);
+    HashMap<String,Object> uploadData(MultipartFile file);
 
     /**
      * 上传文件组
