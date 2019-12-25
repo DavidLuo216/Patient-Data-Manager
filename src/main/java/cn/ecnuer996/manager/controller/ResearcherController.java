@@ -1,7 +1,10 @@
 package cn.ecnuer996.manager.controller;
 
+import cn.ecnuer996.manager.dao.LogDao;
 import cn.ecnuer996.manager.error.ExceptionResponse;
+import cn.ecnuer996.manager.model.Log;
 import cn.ecnuer996.manager.model.Researcher;
+import cn.ecnuer996.manager.service.LogService;
 import cn.ecnuer996.manager.service.ResearcherService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class ResearcherController extends ExceptionResponse {
 
     @Autowired
     private ResearcherService researcherService;
+
+    @Autowired
+    private LogService logService;
 
     @GetMapping(value="/researcher/{name}")
     public JSONObject getResearcher(@PathVariable(value = "name") String name){
@@ -50,17 +56,17 @@ public class ResearcherController extends ExceptionResponse {
 //    }
 
 
-    @GetMapping(value = "/researchers")
-    public JSONObject findAll(){
-        JSONObject response = new JSONObject();
-        JSONObject data = new JSONObject();
-        List<Researcher> researcherList = researcherService.findAll();
-        data.put("researcherList",researcherList);
-        response.put("data",data);
-        response.put("code",200);
-        response.put("message","请求成功");
-        return response;
-    }
+//    @GetMapping(value = "/researchers")
+//    public JSONObject findAll(){
+//        JSONObject response = new JSONObject();
+//        JSONObject data = new JSONObject();
+//        List<Researcher> researcherList = researcherService.findAll();
+//        data.put("researcherList",researcherList);
+//        response.put("data",data);
+//        response.put("code",200);
+//        response.put("message","请求成功");
+//        return response;
+//    }
 
 
     /**
@@ -148,6 +154,51 @@ public class ResearcherController extends ExceptionResponse {
 
         return response;
 
+    }
+
+    @GetMapping(value = "/allLogs")
+    public JSONObject getAllLogs(@RequestParam("index")int pageIndex){
+        JSONObject response = new JSONObject();
+        JSONObject data = new JSONObject();
+        Page page = logService.getAllLogsPage(pageIndex,10);
+        List<Log>logList = page.getContent();
+        int totalPages = page.getTotalPages();
+        int pagesize = page.getSize();
+        Long totalElements = page.getTotalElements();
+
+        data.put("LogList",logList);
+        data.put("totalPages",totalPages);
+        data.put("pageIndex",pageIndex);
+        data.put("totalElements",totalElements);
+        data.put("pageSize",pagesize);
+
+        response.put("data",data);
+        response.put("code",200);
+        response.put("message","请求成功");
+        return response;
+    }
+
+    @GetMapping(value = "/logs")
+    public JSONObject getAllLogsByName(@RequestParam("name") String name,
+                                       @RequestParam("index")int pageIndex){
+        JSONObject response = new JSONObject();
+        JSONObject data = new JSONObject();
+        Page page = logService.getLogsByUsername(name,pageIndex,10);
+        List<Log>logList = page.getContent();
+        int totalPages = page.getTotalPages();
+        int pagesize = page.getSize();
+        Long totalElements = page.getTotalElements();
+
+        data.put("LogList",logList);
+        data.put("totalPages",totalPages);
+        data.put("pageIndex",pageIndex);
+        data.put("totalElements",totalElements);
+        data.put("pageSize",pagesize);
+
+        response.put("data",data);
+        response.put("code",200);
+        response.put("message","请求成功");
+        return response;
     }
 
 //    /**

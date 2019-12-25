@@ -93,7 +93,7 @@ public class PatientDao {
         return mongoTemplate.findAll(Patient.class);
     }
 
-    //添加单条诊疗信息进列表
+    //更新诊疗信息列表
     public void updateDiagnoseList(Patient patient, List<Diagnose> diagnoseList){
         Query query = new Query(Criteria.where("_id").is(patient.getId()));
         Update update = new Update().set("diagnose",diagnoseList);

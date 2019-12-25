@@ -1,5 +1,6 @@
 package cn.ecnuer996.manager.service.Impl;
 
+import cn.ecnuer996.manager.dao.LogDao;
 import cn.ecnuer996.manager.dao.PatientDao;
 import cn.ecnuer996.manager.error.BusinessException;
 import cn.ecnuer996.manager.error.ErrorEm;
@@ -33,6 +34,9 @@ public class PatientServiceImpl implements PatientService {
     @Autowired
     private PatientDao patientDao;
 
+    @Autowired
+    private LogDao logDao;
+
 
     @Override
     public Patient savePatient(Patient patient) {
@@ -44,7 +48,12 @@ public class PatientServiceImpl implements PatientService {
 //        if(name == null||name.equals("")){
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"姓名不可为空");
 //        }
-        return patientDao.savePatient(patient);
+        Patient tmp = patientDao.savePatient(patient);
+
+        String username = "吴忠明";//暂未实现用户切换
+        logDao.addLog(username,patient.getId(),"addPatientInfo");//更新操作记录
+
+        return tmp;
     }
 
     @Override
@@ -96,6 +105,7 @@ public class PatientServiceImpl implements PatientService {
         response.put("code",200);
         response.put("message","成功导入"+patientList.size()+"条记录！");
 
+        logDao.addLog("吴忠明","-1",String.valueOf(patientList.size()));
 
         File del = new File(fileUse.toURI()); //删除项目产生的临时文件
         del.delete();
@@ -108,6 +118,9 @@ public class PatientServiceImpl implements PatientService {
             throw new ProdProcessOrderException("ID为空");
         }
         patientDao.deletePatient(id);
+
+        String username = "吴忠明";//暂未实现用户切换
+        logDao.addLog(username,id,"deletePatientInfo");//更新操作记录
     }
 
     @Override
@@ -188,6 +201,9 @@ public class PatientServiceImpl implements PatientService {
         List<Diagnose> diagnoseList = patient.getDiagnose();
         diagnoseList.add(diagnose);
         patientDao.updateDiagnoseList(patient,diagnoseList);
+
+        String username = "吴忠明";//暂未实现用户切换
+        logDao.addLog(username,id,"AddPatientDiagnose");//更新操作记录
 
 //        if(disease == null||disease.equals("")){
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请填写病症");
