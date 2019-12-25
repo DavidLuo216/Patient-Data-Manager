@@ -4,6 +4,8 @@ import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,11 +43,18 @@ public class PatientDao {
     }
 
     /**
-     * 多条件查询，以一个Patient对象作为查询条件
+     * 分页多条件查询，以一个Patient对象作为查询条件
      * 对参数patient不为null的字段进行相等查询
      * @param patient
      * @return
      */
+    public List<Patient> findPageable(Patient patient,int pageIndex,int pageSize){
+        Criteria criteria=Criteria.byExample(patient);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Query query=Query.query(criteria).with(pageable);
+        return mongoTemplate.find(query,Patient.class,"patient");
+    }
+
     public List<Patient> findByExample(Patient patient){
         Criteria criteria=Criteria.byExample(patient);
         Query query=Query.query(criteria);

@@ -6,6 +6,11 @@ import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.service.ResearcherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +19,9 @@ import java.util.List;
 public class ResearcherServiceImpl implements ResearcherService {
     @Autowired
     private ResearcherDao researcherDao;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     public Researcher getResearcher(String name) {
@@ -68,8 +76,12 @@ public class ResearcherServiceImpl implements ResearcherService {
     }
 
     @Override
-    public List<Researcher> findByExample(Researcher researcher) {
-        return researcherDao.findResearcher(researcher);
+    public Page<Researcher> findByExample(Researcher researcher, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex,pageSize);
+        List<Researcher> researcherList =researcherDao.findResearcher(researcher);
+        int count = researcherList.size();
+        List<Researcher> researcherListPage = researcherDao.findResearcherPageable(researcher,pageIndex,pageSize);
+        return  PageableExecutionUtils.getPage(researcherListPage,pageable,()->count);
 //        return researcherDao.findByExample(researcher);
     }
 }

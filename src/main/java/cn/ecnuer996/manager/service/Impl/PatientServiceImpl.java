@@ -8,6 +8,11 @@ import cn.ecnuer996.manager.model.*;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,9 +57,21 @@ public class PatientServiceImpl implements PatientService {
         return patientDao.findPatient(id,name,gender,phone,address);
     }
 
+    /**
+     * 分页查询
+     * @param patient
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
     @Override
-    public List<Patient> findByExample(Patient patient) {
-        return patientDao.findByExample(patient);
+    public Page<Patient> findByExample(Patient patient, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        List<Patient> patientList = patientDao.findByExample(patient);
+        int count = patientList.size();
+        List<Patient> patientListPage  = patientDao.findPageable(patient,pageIndex,pageSize);
+        return  PageableExecutionUtils.getPage(patientListPage,pageable,()->count);
+
     }
 
     @Override

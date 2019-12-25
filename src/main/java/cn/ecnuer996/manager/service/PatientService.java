@@ -4,6 +4,9 @@ package cn.ecnuer996.manager.service;
 import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
 import java.util.List;
 
 public interface PatientService {
@@ -43,7 +46,7 @@ public interface PatientService {
      * @param patient
      * @return
      */
-    List<Patient> findByExample(Patient patient);
+    Page<Patient> findByExample(Patient patient, int pageIndex, int pageSize);
 
     /**
      * 修改病人信息

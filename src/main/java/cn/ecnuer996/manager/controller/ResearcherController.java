@@ -5,6 +5,7 @@ import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.service.ResearcherService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,11 +68,16 @@ public class ResearcherController extends ExceptionResponse {
      * @return
      */
     @GetMapping(value = "/find-researcher")
-    public JSONObject findResearchers(Researcher researcher){
+    public JSONObject findResearchers(Researcher researcher,@RequestParam("index") int pageIndex){
         JSONObject response = new JSONObject();
         JSONObject data = new JSONObject();
         response.put("data",data);
-        List<Researcher> researcherList = researcherService.findByExample(researcher);
+        Page page = researcherService.findByExample(researcher,pageIndex,10);
+        List<Researcher> researcherList = page.getContent();
+        int totalPages = page.getTotalPages();
+        int pagesize = page.getSize();
+        Long totalElements = page.getTotalElements();
+
         if(researcherList.isEmpty()){
             response.put("code",500);
             response.put("message","无结果");
@@ -88,6 +94,10 @@ public class ResearcherController extends ExceptionResponse {
             tmp.put("isProhibited",r.isProhibited());
             data.put(string,tmp);
         }
+        data.put("totalPages",totalPages);
+        data.put("pageIndex",pageIndex);
+        data.put("totalElements",totalElements);
+        data.put("pageSize",pagesize);
 //        data.put("researcherList",researcherList);
         response.put("code",200);
         response.put("message","请求成功");

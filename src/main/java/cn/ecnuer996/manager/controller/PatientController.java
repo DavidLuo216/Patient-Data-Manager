@@ -14,6 +14,8 @@ import com.mongodb.DBObject;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.validation.BindingResult;
@@ -128,13 +130,17 @@ public class PatientController extends ExceptionResponse {
      * @return
      */
     @GetMapping(value="/find-patient")
-    public JSONObject findPatient(Patient patient){
+    public JSONObject findPatient(Patient patient,@RequestParam("index") int pageIndex){
         //response是这个api返回给前端的整个JSON对象
         JSONObject response=new JSONObject();
         //data也是一个JSON对象，保存的是数据库的查询结果，这里data中保存一个Patient对象列表
         JSONObject data=new JSONObject();
         response.put("data",data);
-        List<Patient> patientList=patientService.findByExample(patient);
+        Page page = patientService.findByExample(patient,pageIndex,10);
+        int totalPages = page.getTotalPages();
+        int pagesize = page.getSize();
+        Long totalElements = page.getTotalElements();
+        List<Patient> patientList=page.getContent();
         if(patientList.isEmpty()){
             response.put("code",500);
             response.put("message","无结果");
@@ -142,6 +148,10 @@ public class PatientController extends ExceptionResponse {
         }
         data.put("patientList",patientList);
         //状态码，200是成功，其他可自定义（如500表示查询失败）
+        data.put("totalPages",totalPages);
+        data.put("pageIndex",pageIndex);
+        data.put("totalElements",totalElements);
+        data.put("pageSize",pagesize);
         response.put("code",200);
         response.put("message","请求成功");
         return response;

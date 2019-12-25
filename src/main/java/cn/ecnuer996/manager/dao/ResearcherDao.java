@@ -2,11 +2,14 @@ package cn.ecnuer996.manager.dao;
 
 import cn.ecnuer996.manager.model.Researcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
+
 
 import java.util.List;
 
@@ -82,7 +85,11 @@ public class ResearcherDao {
         return researcherList;
     }
 
-
+    /**
+     * 不分页
+     * @param researcher
+     * @return
+     */
     public List<Researcher> findResearcher(Researcher researcher){
         Criteria criteria = new Criteria();
         Query query = new Query();
@@ -114,6 +121,41 @@ public class ResearcherDao {
         return mongoTemplate.find(query,Researcher.class,"researcher");
 
     }
+
+    public List<Researcher> findResearcherPageable(Researcher researcher,int pageIndex,int pageSize){
+        Criteria criteria = new Criteria();
+        Query query = new Query();
+        Pageable pageable = PageRequest.of(pageIndex,pageSize);
+        String name = researcher.getName();
+        List<String> roles = researcher.getRoles();
+        Boolean isProhibited = researcher.isProhibited();
+        String registerTime = researcher.getRegisterTime();
+        String lastLoginTime = researcher.getLastLoginTime();
+        if(name!=null&&!name.equals("")){
+            criteria.and("name").is(name);
+        }
+        if(roles!=null){
+            criteria.and("roles").is(roles);
+        }
+//        if(isProhibited!=null){
+//            criteria.and("name").is(name);
+//        }
+        if(registerTime!=null&&!registerTime.equals("")){
+            criteria.and("registerTime").is(registerTime);
+        }
+        if(lastLoginTime!=null&&!lastLoginTime.equals("")){
+            criteria.and("lastLoginTime").is(lastLoginTime);
+        }
+        criteria.and("isProhibited").is(isProhibited);
+        query.addCriteria(criteria);
+
+        query.with(pageable);
+
+
+        return mongoTemplate.find(query,Researcher.class,"researcher");
+
+    }
+
 
 }
 
