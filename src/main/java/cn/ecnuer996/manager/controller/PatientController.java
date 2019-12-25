@@ -54,7 +54,8 @@ public class PatientController extends ExceptionResponse {
         List<JSONObject> checkDates=null;
         if(patient!=null){
             List<Diagnose> diagnoses=patient.getDiagnose();
-            if(diagnoses!=null){
+//            if(diagnoses!=null){
+            if(diagnoses.size()!=0){
                 firstDiagnose=patient.getDiagnose().get(0);
                 checkDates=new ArrayList<>();
                 for(int i=0;i<diagnoses.size();++i){
@@ -81,6 +82,7 @@ public class PatientController extends ExceptionResponse {
      * @param bindingResult
      * @return
      */
+    @CrossOrigin
     @PostMapping(value="/patientAdd")
     public JSONObject addPatient(@Valid @RequestBody Patient patient, BindingResult bindingResult){
         JSONObject response = new JSONObject();
@@ -89,7 +91,7 @@ public class PatientController extends ExceptionResponse {
             response.put("message",bindingResult.getFieldError().getDefaultMessage());
         }
         patientService.savePatient(patient);
-        response.put("code","200");
+        response.put("code",200);
         response.put("message","添加成功");
         return response;
     }

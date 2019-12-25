@@ -56,17 +56,17 @@ public class ResearcherController extends ExceptionResponse {
 //    }
 
 
-//    @GetMapping(value = "/researchers")
-//    public JSONObject findAll(){
-//        JSONObject response = new JSONObject();
-//        JSONObject data = new JSONObject();
-//        List<Researcher> researcherList = researcherService.findAll();
-//        data.put("researcherList",researcherList);
-//        response.put("data",data);
-//        response.put("code",200);
-//        response.put("message","请求成功");
-//        return response;
-//    }
+    @GetMapping(value = "/researchers")
+    public JSONObject findAll(){
+        JSONObject response = new JSONObject();
+        JSONObject data = new JSONObject();
+        List<Researcher> researcherList = researcherService.findAll();
+        data.put("researcherList",researcherList);
+        response.put("data",data);
+        response.put("code",200);
+        response.put("message","请求成功");
+        return response;
+    }
 
 
     /**
@@ -145,13 +145,12 @@ public class ResearcherController extends ExceptionResponse {
         return response;
     }
 
-    @PutMapping(value = "/researcher")
+    @PostMapping(value = "/update-researcher")
     public JSONObject updateResearcher(Researcher researcher){
         JSONObject response = new JSONObject();
         researcherService.updateResearcherInfo(researcher);
         response.put("code",200);
         response.put("message","更新成功");
-
         return response;
 
     }
