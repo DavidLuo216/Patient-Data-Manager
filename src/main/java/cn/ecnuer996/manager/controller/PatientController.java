@@ -51,14 +51,16 @@ public class PatientController extends ExceptionResponse {
         JSONObject data=new JSONObject();
         Patient patient =patientService.getPatientByID(id);
         Diagnose firstDiagnose=null;
-        List<String> checkDates=null;
+        List<JSONObject> checkDates=null;
         if(patient!=null){
             List<Diagnose> diagnoses=patient.getDiagnose();
             if(diagnoses!=null){
                 firstDiagnose=patient.getDiagnose().get(0);
                 checkDates=new ArrayList<>();
                 for(int i=0;i<diagnoses.size();++i){
-                    checkDates.add(diagnoses.get(i).getDate());
+                    JSONObject date=new JSONObject();
+                    date.put("value",diagnoses.get(i).getDate());
+                    checkDates.add(date);
                 }
             }
         }
