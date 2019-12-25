@@ -164,10 +164,39 @@ public class PatientController extends ExceptionResponse {
      * @param diagnose
      * @return
      */
-    @PostMapping(value = "/patient/{id}/diagnose")
-    public JSONObject addDiagnose(@PathVariable(value = "id")String id,
+    @PostMapping(value = "/patient/{id}/diagnoseInfo")
+    public JSONObject addDiagnoseInfo(@PathVariable(value = "id")String id,
                                   @RequestBody Diagnose diagnose,
                                   @RequestParam("files") List<Map<String,Object>> filesWithType){
+        JSONObject response = new JSONObject();
+
+
+//        List<> files = (List<MultipartFile>) filesWithType.get("files");
+        for(Map<String,Object> m : filesWithType ){
+            MultipartFile file = (MultipartFile) m.get("file");
+            Object upLoadResult = gridFsService.uploadData(file);
+            if(!upLoadResult.toString().equals("upload fail")){
+                Map params = (Map)upLoadResult;
+                String fileId = (String) params.get("id");
+
+                String type = (String) m.get("type");
+
+                patientService.addFileIdToLists(fileId,type,diagnose);
+
+            }
+            throw new ProdProcessOrderException("文件上传失败");
+        }
+
+        patientService.addDiagnose(id,diagnose);
+        response.put("code",200);
+        response.put("message","添加成功");
+        return response;
+    }
+
+    @PostMapping(value = "/patient/{id}/diagnoseFile")
+    public JSONObject addDiagnoseFile(@PathVariable(value = "id")String id,
+                                      @RequestBody Diagnose diagnose,
+                                      @RequestParam("files") List<Map<String,Object>> filesWithType){
         JSONObject response = new JSONObject();
 
 

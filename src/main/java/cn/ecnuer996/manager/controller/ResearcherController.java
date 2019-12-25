@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -83,6 +84,7 @@ public class ResearcherController extends ExceptionResponse {
             response.put("message","无结果");
             return response;
         }
+        List<Object> researcherListBack = new ArrayList<>();
 //        List<Researcher> researcherList = researcherService.findAll();
         for(Researcher r : researcherList){
             JSONObject tmp = new JSONObject();
@@ -92,8 +94,10 @@ public class ResearcherController extends ExceptionResponse {
             tmp.put("registerTime",r.getRegisterTime());
             tmp.put("lastLoginTime",r.getLastLoginTime());
             tmp.put("isProhibited",r.isProhibited());
-            data.put(string,tmp);
+            researcherListBack.add(tmp);
+//            data.put(string,tmp);
         }
+        data.put("researcherList",researcherListBack);
         data.put("totalPages",totalPages);
         data.put("pageIndex",pageIndex);
         data.put("totalElements",totalElements);
