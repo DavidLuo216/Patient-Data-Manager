@@ -282,6 +282,7 @@ public class PatientServiceImpl implements PatientService {
 //                break;
             case "CTImage":
                 List<String> imageList = checkFile.getCTImage();
+                if(imageList==null) imageList = new ArrayList<>();
                 imageList.add(fileId);
                 checkFile.setCTImage(imageList);
                 break;
@@ -291,6 +292,7 @@ public class PatientServiceImpl implements PatientService {
 //                break;
             case "CTPAMp4":
                 List<String> mp4List = checkFile.getCTPAMp4();
+                if(mp4List==null) mp4List = new ArrayList<>();
                 mp4List.add(fileId);
                 checkFile.setCTPAMp4(mp4List);
                 break;

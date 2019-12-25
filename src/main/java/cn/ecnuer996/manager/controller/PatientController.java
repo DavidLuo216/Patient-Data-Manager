@@ -218,7 +218,6 @@ public class PatientController extends ExceptionResponse {
                                        @RequestParam(value = "date")String date,
                                        @RequestParam(value = "file") MultipartFile file){
         JSONObject response = new JSONObject();
-        JSONObject data = new JSONObject();
 
 //        List<> files = (List<MultipartFile>) filesWithType.get("files");
         HashMap<String,Object> upLoadResult = gridFsService.uploadData(file);
@@ -239,6 +238,31 @@ public class PatientController extends ExceptionResponse {
 
 
         }
+
+    @PostMapping(value = "/patient/{id}/diagnoseMp4")
+    public JSONObject addDiagnoseMp4(@PathVariable(value = "id")String id,
+                                       @RequestParam(value = "date")String date,
+                                       @RequestParam(value = "file") MultipartFile file){
+        JSONObject response = new JSONObject();
+
+//        List<> files = (List<MultipartFile>) filesWithType.get("files");
+        HashMap<String,Object> upLoadResult = gridFsService.uploadData(file);
+
+
+        String fileId = (String) upLoadResult.get("id");
+
+        String type = "CTPAMp4";
+
+        Diagnose diagnose = patientService.findDiagnoseByIdAndDate(id,date);
+
+        patientService.addFileIdToLists(fileId,type,diagnose);
+        //  此时diagnose已经成功添加上文件
+        patientService.updateDignose(id,diagnose);
+        response.put("code",200);
+        response.put("message","添加成功");
+        return response;
+
+    }
 
 
 
