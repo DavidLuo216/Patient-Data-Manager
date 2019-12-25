@@ -5,13 +5,17 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class Patient {
-    @NotNull(message = "输入病人ID！")
+    @NotBlank(message = "输入病人ID！")
     private String id;
-    @NotNull(message = "输入病人姓名！")
+    @NotBlank(message = "输入病人姓名！")
     private String name;
+    @NotBlank(message = "输入生日！")
     private String birthday;
+    @NotBlank(message = "输入性别！")
     private String gender;
+    @NotBlank(message = "输入联系方式！")
     private String phone;
+    @NotBlank(message = "输入联系地址！")
     private String address;
     private List<History> history;
     private List<Diagnose> diagnose;

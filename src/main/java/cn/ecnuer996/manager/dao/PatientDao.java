@@ -93,5 +93,14 @@ public class PatientDao {
         mongoTemplate.updateFirst(query,update,Patient.class);
     }
 
+    public void addFileIdIntoCheckFileListByType(String id,String fileId,String type){
+        Query query=new Query(Criteria.where("_id").is(id));
+        Patient patient=mongoTemplate.findOne(query,Patient.class);
+        switch(type){
+//            case "CT": List<String> =
+        }
+
+    }
+
 }
 

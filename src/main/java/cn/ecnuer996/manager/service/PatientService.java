@@ -61,6 +61,7 @@ public interface PatientService {
 
     void addHistory(String id, History history);
 
+    void addFileIdToLists(String fileId,String type,Diagnose diagnose);
 
 
 }

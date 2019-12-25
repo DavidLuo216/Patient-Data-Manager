@@ -4,10 +4,7 @@ import cn.ecnuer996.manager.dao.PatientDao;
 import cn.ecnuer996.manager.error.BusinessException;
 import cn.ecnuer996.manager.error.ErrorEm;
 import cn.ecnuer996.manager.error.ProdProcessOrderException;
-import cn.ecnuer996.manager.model.Diagnose;
-import cn.ecnuer996.manager.model.History;
-import cn.ecnuer996.manager.model.Patient;
-import cn.ecnuer996.manager.model.Result;
+import cn.ecnuer996.manager.model.*;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,5 +130,51 @@ public class PatientServiceImpl implements PatientService {
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请描述细节");
 //        }
 //        patientDao.addHistory(patient,history);
+    }
+
+    /**
+     * 根据上传的文件类型在正确列表中传入文件ID号
+     * @param fileId
+     * @param type
+     * @param diagnose
+     */
+    @Override
+    public void addFileIdToLists(String fileId, String type,Diagnose diagnose) {
+        CheckInfo checkInfo = diagnose.getCheckInfo();
+        CheckFile diagnoseFiles = diagnose.getCheckInfo().getCheckFile();
+        List<String> CTFiles = diagnoseFiles.getCT();
+        List<String> CTImages = diagnoseFiles.getCTImage();
+        List<String> CTPAImages = diagnoseFiles.getCTPA();
+        List<String> CTPAMp4 = diagnoseFiles.getCTPAMp4();
+        List<String> CTPAs = diagnoseFiles.getCTPA();
+
+        switch(type){
+            case "CT":
+                CTFiles.add(fileId);
+                diagnoseFiles.setCT(CTFiles);
+                break;
+            case "CTImage":
+                CTImages.add(fileId);
+                diagnoseFiles.setCT(CTImages);
+                break;
+            case "CTPAImage":
+                CTPAImages.add(fileId);
+                diagnoseFiles.setCT(CTPAImages);
+                break;
+            case "CTPAMp4":
+                CTPAMp4.add(fileId);
+                diagnoseFiles.setCT(CTPAMp4);
+                break;
+            case "CTPA":
+                CTPAs.add(fileId);
+                diagnoseFiles.setCT(CTPAs);
+                break;
+
+            default:
+                throw new ProdProcessOrderException("类型不正确");
+        }
+
+        checkInfo.setCheckFile(diagnoseFiles);
+        diagnose.setCheckInfo(checkInfo);
     }
 }

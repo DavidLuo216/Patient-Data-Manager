@@ -1,18 +1,35 @@
 package cn.ecnuer996.manager.controller;
 
 import cn.ecnuer996.manager.error.ExceptionResponse;
+import cn.ecnuer996.manager.error.ProdProcessOrderException;
+import cn.ecnuer996.manager.model.CheckFile;
 import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.History;
 import cn.ecnuer996.manager.model.Patient;
+import cn.ecnuer996.manager.service.GridFsService;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import org.bson.BSONObject;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
+
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -20,6 +37,13 @@ public class PatientController extends ExceptionResponse {
 
     @Autowired
     private PatientService patientService;
+    @Autowired
+    private GridFsService gridFsService;
+
+    @Autowired
+    private GridFsTemplate gridFsTemplate;
+    @Resource
+    private MongoDbFactory mongoDbFactory;
 
     @GetMapping(value="/patient")
     public JSONObject getPatient(@RequestParam String id){
@@ -129,8 +153,28 @@ public class PatientController extends ExceptionResponse {
      * @return
      */
     @PostMapping(value = "/patient/{id}/diagnose")
-    public JSONObject addDiagnose(@PathVariable(value = "id")String id,@RequestBody Diagnose diagnose){
+    public JSONObject addDiagnose(@PathVariable(value = "id")String id,
+                                  @RequestBody Diagnose diagnose,
+                                  @RequestParam("files") List<Map<String,Object>> filesWithType){
         JSONObject response = new JSONObject();
+
+
+//        List<> files = (List<MultipartFile>) filesWithType.get("files");
+        for(Map<String,Object> m : filesWithType ){
+            MultipartFile file = (MultipartFile) m.get("file");
+            Object upLoadResult = gridFsService.uploadData(file);
+            if(!upLoadResult.toString().equals("upload fail")){
+                Map params = (Map)upLoadResult;
+                String fileId = (String) params.get("id");
+
+                String type = (String) m.get("type");
+
+                patientService.addFileIdToLists(fileId,type,diagnose);
+
+            }
+            throw new ProdProcessOrderException("文件上传失败");
+        }
+
         patientService.addDiagnose(id,diagnose);
         response.put("code",200);
         response.put("message","添加成功");
@@ -151,6 +195,45 @@ public class PatientController extends ExceptionResponse {
 //        response.put("message","添加成功");
 //        return response;
 //    }
+
+    /**
+     * 上传文件
+     */
+
+    @PostMapping(value = "/file/upload")
+    public Object uploadFile(@RequestParam("files") List<MultipartFile> files){
+        return gridFsService.uploadFiles(files);
+    }
+
+    /**
+     * 查看文件接口
+     * @param id
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping(value = "/file/view/{id}")
+    public void viewFile(@PathVariable(value = "id") String id, HttpServletResponse response) throws IOException {
+//        return gridFsService.uploadData(file);
+        gridFsService.viewFile(id, response);
+//        // 获得SpringBoot提供的mongodb的GridFS对象
+//        DBObject metaData = new BasicDBObject();
+//
+//        // 获得提交的文件名
+//        String fileName = file.getOriginalFilename();
+//        // 获得文件输入流
+//        InputStream ins = file.getInputStream();
+//        // 获得文件类型
+//        String contentType = file.getContentType();
+//        // 将文件存储到mongodb中,mongodb 将会返回这个文件的具体信息
+//        ObjectId objectId = gridFsTemplate.store(ins,fileName,metaData);
+//        //将文件信息保存到关系型数据库中进行维护
+////           FileInfoAO fileInfo = new FileInfoAO();
+////           fileInfo.setContentType(contentType);
+////           fileInfo.setFileName(fileName);
+////           fileInfo.setLastUpdateBy(user != null ? user.getId() : null);
+////           fileInfo.setMongoFileId(objectId.toString());
+//         String id = objectId.toString();
+    }
 
 
 }
