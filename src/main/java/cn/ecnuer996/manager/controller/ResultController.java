@@ -1,7 +1,5 @@
 package cn.ecnuer996.manager.controller;
 
-import cn.ecnuer996.manager.dao.ResultDao;
-import cn.ecnuer996.manager.model.Patient;
 import cn.ecnuer996.manager.model.Result;
 import cn.ecnuer996.manager.service.ResultService;
 import com.alibaba.fastjson.JSONObject;
