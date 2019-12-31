@@ -184,5 +184,30 @@ public class PatientDao {
         Query query=new Query();
         return mongoTemplate.count(query,"patient");
     }
+
+    /**
+     * 查询病患表有多少条记录
+     * @return
+     */
+    public long findCount(String beginYear, String endYear, String gender){
+        Criteria criteria;
+        if(beginYear!=null && !"".equals(beginYear)){
+            if(endYear!=null && !"".equals(endYear)){
+                if(gender!=null && !"".equals(gender)){
+                    criteria=Criteria.where("gender").is(gender)
+                            .andOperator(Criteria.where("birthday").gte(beginYear),Criteria.where("birthday").lte(endYear));
+                }else{
+                    criteria=Criteria.where("birthday").gte(beginYear)
+                            .andOperator(Criteria.where("birthday").lte(endYear));
+                }
+            }else{
+                criteria=Criteria.where("birthday").gte(beginYear);
+            }
+        }else{
+            criteria=Criteria.where("gender").is(gender);
+        }
+        Query query=new Query(criteria);
+        return mongoTemplate.count(query,"patient");
+    }
 }
 

@@ -161,7 +161,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Page<Patient> findByExample(String beginYear, String endYear, String gender, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        long count=patientDao.findCount();
+        long count=patientDao.findCount(beginYear,endYear,gender);
         List<Patient> patientListPage  = patientDao.findPageable(beginYear,endYear,gender, pageIndex,pageSize);
         return  PageableExecutionUtils.getPage(patientListPage,pageable,()->count);
     }
