@@ -45,7 +45,6 @@ public class PatientController extends ExceptionResponse {
         List<JSONObject> checkDates=null;
         if(patient!=null){
             List<Diagnose> diagnoses=patient.getDiagnose();
-//            if(diagnoses!=null){
             if(diagnoses.size()!=0){
                 firstDiagnose=patient.getDiagnose().get(0);
                 checkDates=new ArrayList<>();
@@ -204,30 +203,14 @@ public class PatientController extends ExceptionResponse {
     public JSONObject addDiagnoseInfo(@PathVariable(value = "id")String id,
                                   @RequestBody Diagnose diagnose){
         JSONObject response = new JSONObject();
-
-
-//        List<> files = (List<MultipartFile>) filesWithType.get("files");
-//        for(Map<String,Object> m : filesWithType ){
-//            MultipartFile file = (MultipartFile) m.get("file");
-//            Object upLoadResult = gridFsService.uploadData(file);
-//            if(!upLoadResult.toString().equals("upload fail")){
-//                Map params = (Map)upLoadResult;
-//                String fileId = (String) params.get("id");
-//
-//                String type = (String) m.get("type");
-//
-//                patientService.addFileIdToLists(fileId,type,diagnose);
-//
-//            }
-//            else{
-//                response.put("code",500);
-//                response.put("message","上传失败");
-//                return response;
-//            }
-
-//        }
-
-        patientService.addDiagnose(id,diagnose);
+        Diagnose searchDiagnose=patientService.findDiagnoseByIdAndDate(id,diagnose.getDate());
+        if(searchDiagnose==null){
+            //没有对应日期的诊疗记录，新增诊疗记录
+            patientService.addDiagnose(id,diagnose);
+        }else{
+            //有对应日期的诊疗记录，更新诊疗记录
+            patientService.updateDignose(id,diagnose);
+        }
         response.put("code",200);
         response.put("message","添加成功");
         return response;
