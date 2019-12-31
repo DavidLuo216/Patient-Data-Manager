@@ -87,6 +87,7 @@ public interface PatientService {
 
     void addFileIdToLists(String fileId,String type,Diagnose diagnose);
 
+    void removeFileFromLists(String fileId,String type,Diagnose diagnose);
     /**
      * 根据id和日期返回唯一diagnose
      * @param id
