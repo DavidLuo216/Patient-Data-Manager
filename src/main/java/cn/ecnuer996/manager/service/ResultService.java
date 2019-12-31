@@ -1,6 +1,7 @@
 package cn.ecnuer996.manager.service;
 
 import cn.ecnuer996.manager.model.Result;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface ResultService  {
 
     public void updateResult(Result result);
 
-    List<Result> findResult(Result result);
+    Page<Result> findResult(Result result, int pageIndex, int pageSize);
 
 
 }

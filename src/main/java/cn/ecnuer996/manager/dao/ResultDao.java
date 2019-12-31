@@ -3,6 +3,8 @@ package cn.ecnuer996.manager.dao;
 import cn.ecnuer996.manager.model.Researcher;
 import cn.ecnuer996.manager.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -44,6 +46,12 @@ public class ResultDao {
     public List<Result> findByExample(Result result){
         Criteria criteria=Criteria.byExample(result);
         Query query=Query.query(criteria);
+        return mongoTemplate.find(query,Result.class,"result");
+    }
+    public List<Result> findPage(Result result,int pageIndex,int pageSize){
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Criteria criteria=Criteria.byExample(result);
+        Query query=Query.query(criteria).with(pageable);
         return mongoTemplate.find(query,Result.class,"result");
     }
 }

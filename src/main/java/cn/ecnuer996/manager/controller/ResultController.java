@@ -6,6 +6,7 @@ import cn.ecnuer996.manager.model.Result;
 import cn.ecnuer996.manager.service.ResultService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,29 +60,46 @@ public class ResultController {
         return response;
     }
 
-    @GetMapping(value = "/results")
-    public JSONObject findAllResults(){
-        JSONObject response = new JSONObject();
-        JSONObject data = new JSONObject();
-        List<Result> resultList = resultService.findAll();
-        data.put("resultList",resultList);
-        response.put("data",data);
-        response.put("code",200);
-        response.put("message","请求成功");
-        return response;
-    }
+//    @GetMapping(value = "/results")
+//    public JSONObject findAllResults(){
+//        JSONObject response = new JSONObject();
+//        JSONObject data = new JSONObject();
+//        List<Result> resultList = resultService.findAll();
+//        data.put("resultList",resultList);
+//        response.put("data",data);
+//        response.put("code",200);
+//        response.put("message","请求成功");
+//        return response;
+//    }
+
+    /**
+     * 多条件查询/也可填空参数来获取所有结果
+     * @param result
+     * @return
+     */
 
     @GetMapping(value = "/find-result")
-    public JSONObject findResults(Result result){
+    public JSONObject findResults(Result result,@RequestParam("index") int pageIndex){
         JSONObject response = new JSONObject();
         JSONObject data = new JSONObject();
-        List<Result> resultList = resultService.findResult(result);
+
+        Page page = resultService.findResult(result,pageIndex,10);
+        List<Result> resultList = page.getContent();
         if(resultList.isEmpty()){
             response.put("code",500);
             response.put("message","无结果");
             return response;
         }
+        int totalPages = page.getTotalPages();
+        int pagesize = page.getSize();
+        Long totalElements = page.getTotalElements();
+
+        data.put("totalPages",totalPages);
+        data.put("pageIndex",pageIndex);
+        data.put("totalElements",totalElements);
+        data.put("pageSize",pagesize);
         data.put("resultList",resultList);
+
         response.put("data",data);
         response.put("code",200);
         response.put("message","请求成功");

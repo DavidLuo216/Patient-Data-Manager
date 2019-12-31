@@ -6,6 +6,10 @@ import cn.ecnuer996.manager.model.Result;
 import cn.ecnuer996.manager.service.ResearcherService;
 import cn.ecnuer996.manager.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,7 +51,11 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public List<Result> findResult(Result result) {
-        return resultDao.findByExample(result);
+    public Page<Result> findResult(Result result,int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        List<Result> resultList = resultDao.findByExample(result);
+        int count = resultList.size();
+        List<Result> resultListPage =  resultDao.findPage(result,pageIndex,pageSize);
+        return PageableExecutionUtils.getPage(resultListPage,pageable,()->count);
     }
 }
