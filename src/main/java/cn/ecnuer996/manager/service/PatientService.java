@@ -49,11 +49,23 @@ public interface PatientService {
     public List<Patient> findPatient(String id,String name,String birthday,String gender,String phone,String address);
 
     /**
-     * 根据参数patient中不为null的字段进行多条件相等查询
-     * @param patient
+     * 无条件分页查询
+     * @param pageIndex
+     * @param pageSize
      * @return
      */
-    Page<Patient> findByExample(Patient patient, int pageIndex, int pageSize);
+    Page<Patient> findByExample(int pageIndex, int pageSize);
+
+    /**
+     * 分页查询，包含出生年份的范围查询
+     * @param beginYear
+     * @param endYear
+     * @param gender
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    Page<Patient> findByExample(String beginYear, String endYear, String gender, int pageIndex, int pageSize);
 
     /**
      * 修改病人信息

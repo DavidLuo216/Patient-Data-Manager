@@ -61,6 +61,51 @@ public class PatientDao {
         return mongoTemplate.find(query,Patient.class,"patient");
     }
 
+    /**
+     * 无条件分页查询
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public List<Patient> findPageable(int pageIndex, int pageSize) {
+        Criteria criteria=new Criteria();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Query query=Query.query(criteria).with(pageable);
+        return mongoTemplate.find(query,Patient.class,"patient");
+    }
+
+    /**
+     * 病患列表条件查询：1.年份范围 2.性别
+     * 不允许所有查询条件为空
+     * @param beginYear 开始年份
+     * @param endYear 结束年份
+     * @param gender 性别
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public List<Patient> findPageable(String beginYear, String endYear, String gender, int pageIndex,int pageSize){
+        Criteria criteria;
+        if(beginYear!=null && !"".equals(beginYear)){
+            if(endYear!=null && !"".equals(endYear)){
+                if(gender!=null && !"".equals(gender)){
+                    criteria=Criteria.where("gender").is(gender)
+                            .andOperator(Criteria.where("birthday").gte(beginYear),Criteria.where("birthday").lte(endYear));
+                }else{
+                    criteria=Criteria.where("birthday").gte(beginYear)
+                            .andOperator(Criteria.where("birthday").lte(endYear));
+                }
+            }else{
+                criteria=Criteria.where("birthday").gte(beginYear);
+            }
+        }else{
+            criteria=Criteria.where("gender").is(gender);
+        }
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Query query=Query.query(criteria).with(pageable);
+        return mongoTemplate.find(query,Patient.class,"patient");
+    }
+
     public List<Patient> findByExample(Patient patient){
         Criteria criteria=Criteria.byExample(patient);
         Query query=Query.query(criteria);
@@ -131,5 +176,13 @@ public class PatientDao {
 
     }
 
+    /**
+     * 查询病患表有多少条记录
+     * @return
+     */
+    public long findCount(){
+        Query query=new Query();
+        return mongoTemplate.count(query,"patient");
+    }
 }
 

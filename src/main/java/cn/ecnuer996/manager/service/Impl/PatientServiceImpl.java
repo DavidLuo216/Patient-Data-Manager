@@ -136,20 +136,34 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
-     * 分页查询
-     * @param patient
+     * 无条件分页查询
      * @param pageIndex
      * @param pageSize
      * @return
      */
     @Override
-    public Page<Patient> findByExample(Patient patient, int pageIndex, int pageSize) {
+    public Page<Patient> findByExample(int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        List<Patient> patientList = patientDao.findByExample(patient);
-        int count = patientList.size();
-        List<Patient> patientListPage  = patientDao.findPageable(patient,pageIndex,pageSize);
+        long count = patientDao.findCount();
+        List<Patient> patientListPage  = patientDao.findPageable(pageIndex,pageSize);
         return  PageableExecutionUtils.getPage(patientListPage,pageable,()->count);
+    }
 
+    /**
+     * 带条件分页查询，包含出生年份的范围查询
+     * @param beginYear
+     * @param endYear
+     * @param gender
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public Page<Patient> findByExample(String beginYear, String endYear, String gender, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        long count=patientDao.findCount();
+        List<Patient> patientListPage  = patientDao.findPageable(beginYear,endYear,gender, pageIndex,pageSize);
+        return  PageableExecutionUtils.getPage(patientListPage,pageable,()->count);
     }
 
     @Override
@@ -205,8 +219,10 @@ public class PatientServiceImpl implements PatientService {
         diagnoseList.add(diagnose);
         patientDao.updateDiagnoseList(patient,diagnoseList);
 
-        String username = "吴忠明";//暂未实现用户切换
-        logDao.addLog(username,id,"AddPatientDiagnose");//更新操作记录
+        //暂未实现用户切换
+        String username = "吴忠明";
+        //更新操作记录
+        logDao.addLog(username,id,"AddPatientDiagnose");
 
 //        if(disease == null||disease.equals("")){
 //            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请填写病症");
@@ -220,17 +236,20 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void updateDignose(String id, Diagnose diagnose) {
         Patient patient = patientDao.findPatientByID(id);
-        List<Diagnose> diagnoseList = new ArrayList<>();
+        List<Diagnose> diagnoseList;
         diagnoseList = patient.getDiagnose();
-        if(diagnoseList.isEmpty())
+        if(diagnoseList.isEmpty()){
             addDiagnose(id,diagnose);
+        }
         else{
             Diagnose tmp = new Diagnose();
             for(Diagnose d : diagnoseList){
                 if(d.getDate().equals(diagnose.getDate())) {
                     tmp = d;
                     }
-                else addDiagnose(id,diagnose);
+                else{
+                    addDiagnose(id,diagnose);
+                }
             }
             int index = diagnoseList.indexOf(tmp);
 //            diagnoseList.remove(tmp);
@@ -246,14 +265,6 @@ public class PatientServiceImpl implements PatientService {
         List<History> historyList = patient.getHistory();
         historyList.add(history);
         patientDao.updateHistoryList(patient,historyList);
-
-//        if(disease == null||disease.equals("")){
-//            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请填写病症");
-//        }
-//        if(details == null||details.equals("")){
-//            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"请描述细节");
-//        }
-//        patientDao.addHistory(patient,history);
     }
 
     /**
@@ -266,8 +277,9 @@ public class PatientServiceImpl implements PatientService {
     public void addFileIdToLists(String fileId, String type,Diagnose diagnose) {
         CheckInfo checkInfo = diagnose.getCheckInfo();
         CheckFile checkFile = diagnose.getCheckInfo().getCheckFile();
-        if(checkFile==null)
+        if(checkFile==null){
             checkFile = new CheckFile();
+        }
         //空指针
 //        List<String> CTFiles = diagnoseFiles.getCT();
 //        List<String> CTImages = diagnoseFiles.getCTImage();
@@ -282,7 +294,9 @@ public class PatientServiceImpl implements PatientService {
 //                break;
             case "CTImage":
                 List<String> imageList = checkFile.getCTImage();
-                if(imageList==null) imageList = new ArrayList<>();
+                if(imageList==null){
+                    imageList = new ArrayList<>();
+                }
                 imageList.add(fileId);
                 checkFile.setCTImage(imageList);
                 break;
@@ -292,7 +306,9 @@ public class PatientServiceImpl implements PatientService {
 //                break;
             case "CTPAMp4":
                 List<String> mp4List = checkFile.getCTPAMp4();
-                if(mp4List==null) mp4List = new ArrayList<>();
+                if(mp4List==null){
+                    mp4List = new ArrayList<>();
+                }
                 mp4List.add(fileId);
                 checkFile.setCTPAMp4(mp4List);
                 break;
