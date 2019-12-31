@@ -326,6 +326,45 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public void removeFileFromLists(String fileId, String type, Diagnose diagnose) {
+        CheckInfo checkInfo = diagnose.getCheckInfo();
+        CheckFile checkFile = diagnose.getCheckInfo().getCheckFile();
+        if (checkFile == null) {
+            checkFile = new CheckFile();
+        }
+        switch (type) {
+//            case "CT":
+//                CTFiles.add(fileId);
+//                diagnoseFiles.setCT(CTFiles);
+//                break;
+            case "CTImage":
+                List<String> imageList = checkFile.getCTImage();
+                imageList.remove(fileId);
+                checkFile.setCTImage(imageList);
+                break;
+//            case "CTPAImage":
+//                CTPAImages.add(fileId);
+//                diagnoseFiles.setCT(CTPAImages);
+//                break;
+            case "CTPAMp4":
+                List<String> mp4List = checkFile.getCTPAMp4();
+                mp4List.remove(fileId);
+                checkFile.setCTPAMp4(mp4List);
+                break;
+//            case "CTPA":
+//                CTPAs.add(fileId);
+//                diagnoseFiles.setCT(CTPAs);
+//                break;
+
+            default:
+                throw new ProdProcessOrderException("类型不正确");
+        }
+        checkInfo.setCheckFile(checkFile);
+        diagnose.setCheckInfo(checkInfo);
+    }
+
+
+    @Override
     public Diagnose findDiagnoseByIdAndDate(String id, String date) {
         return patientDao.findDiagnoseByIdAndDate(id,date);
     }

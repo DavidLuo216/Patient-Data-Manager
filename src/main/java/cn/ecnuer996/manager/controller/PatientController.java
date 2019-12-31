@@ -249,6 +249,21 @@ public class PatientController extends ExceptionResponse {
 
         }
 
+
+    @PostMapping(value = "/patient/{id}/removeImage")
+    public JSONObject removeDiagnoseImage(@PathVariable(value = "id") String id,
+                                          @RequestParam(value = "date")String date,
+                                          @RequestParam(value = "fileId")String fileId){
+        JSONObject response = new JSONObject();
+        Diagnose diagnose = patientService.findDiagnoseByIdAndDate(id,date);
+        patientService.removeFileFromLists(fileId,"CTImage",diagnose);
+        patientService.updateDignose(id,diagnose);
+        gridFsService.remove(fileId);
+        response.put("code",200);
+        response.put("message","删除成功");
+        return response;
+        }
+
     @PostMapping(value = "/patient/{id}/diagnoseMp4")
     public JSONObject addDiagnoseMp4(@PathVariable(value = "id")String id,
                                        @RequestParam(value = "date")String date,
