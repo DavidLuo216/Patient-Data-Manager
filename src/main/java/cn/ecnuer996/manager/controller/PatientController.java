@@ -45,7 +45,7 @@ public class PatientController extends ExceptionResponse {
         List<JSONObject> checkDates=null;
         if(patient!=null){
             List<Diagnose> diagnoses=patient.getDiagnose();
-            if(diagnoses.size()!=0){
+            if(diagnoses!=null && diagnoses.size()!=0){
                 firstDiagnose=patient.getDiagnose().get(0);
                 checkDates=new ArrayList<>();
                 for(int i=0;i<diagnoses.size();++i){

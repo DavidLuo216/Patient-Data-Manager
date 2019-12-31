@@ -4,7 +4,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class Result {
-    @NotBlank(message = "请填写信息")
     private  String _id;
     @NotBlank(message = "请填写信息")
     private String researcher;

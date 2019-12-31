@@ -15,11 +15,15 @@ import java.util.List;
 @RestController
 public class ResultController {
 
-    @Autowired
     private ResultService resultService;
 
-    @GetMapping(value="/result/{_id}")
-    public JSONObject getResult(@PathVariable("_id") String id){
+    @Autowired
+    public void setResultService(ResultService resultService) {
+        this.resultService = resultService;
+    }
+
+    @GetMapping(value="/result/{id}")
+    public JSONObject getResult(@PathVariable("id") String id){
         JSONObject response=new JSONObject();
         Result result =resultService.getResultByID(id);
         response.put("result",result);
