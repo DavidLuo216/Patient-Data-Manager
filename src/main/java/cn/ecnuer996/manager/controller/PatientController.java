@@ -1,18 +1,12 @@
 package cn.ecnuer996.manager.controller;
 
 import cn.ecnuer996.manager.error.ExceptionResponse;
-import cn.ecnuer996.manager.error.ProdProcessOrderException;
 import cn.ecnuer996.manager.model.*;
 import cn.ecnuer996.manager.service.GridFsService;
 import cn.ecnuer996.manager.service.PatientService;
 import com.alibaba.fastjson.JSONObject;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import org.bson.BSONObject;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.validation.BindingResult;
@@ -23,13 +17,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -136,18 +127,18 @@ public class PatientController extends ExceptionResponse {
         }
 
     /**
-     * 多字段查询/也可填写空参数获取所有Patient
-     * @param patient
+     * 无条件分页查询
+     * @param pageIndex
      * @return
      */
     @GetMapping(value="/find-patient")
-    public JSONObject findPatient(Patient patient,@RequestParam("index") int pageIndex){
+    public JSONObject findPatient(@RequestParam("index") int pageIndex){
         //response是这个api返回给前端的整个JSON对象
         JSONObject response=new JSONObject();
         //data也是一个JSON对象，保存的是数据库的查询结果，这里data中保存一个Patient对象列表
         JSONObject data=new JSONObject();
         response.put("data",data);
-        Page page = patientService.findByExample(patient,pageIndex,10);
+        Page page = patientService.findByExample(pageIndex,10);
         int totalPages = page.getTotalPages();
         int pagesize = page.getSize();
         Long totalElements = page.getTotalElements();
@@ -157,6 +148,40 @@ public class PatientController extends ExceptionResponse {
             response.put("message","无结果");
             return response;
         }
+        data.put("patientList",patientList);
+        //状态码，200是成功，其他可自定义（如500表示查询失败）
+        data.put("totalPages",totalPages);
+        data.put("pageIndex",pageIndex);
+        data.put("totalElements",totalElements);
+        data.put("pageSize",pagesize);
+        response.put("code",200);
+        response.put("message","请求成功");
+        return response;
+    }
+
+    /**
+     * 多字段查询/包含年份范围，性别作为查询条件
+     * @param pageIndex
+     * @param beginYear
+     * @param endYear
+     * @param gender
+     * @return
+     */
+    @GetMapping(value="/find-patient-with-condition")
+    public JSONObject findPatientByCondition(@RequestParam("index") int pageIndex,
+                                             @RequestParam(value = "beginYear",required = false) String beginYear,
+                                             @RequestParam(value="endYear",required = false) String endYear,
+                                             @RequestParam(value="gender",required = false) String gender){
+        //response是这个api返回给前端的整个JSON对象
+        JSONObject response=new JSONObject();
+        //data也是一个JSON对象，保存的是数据库的查询结果，这里data中保存一个Patient对象列表
+        JSONObject data=new JSONObject();
+        response.put("data",data);
+        Page page = patientService.findByExample(beginYear,endYear,gender,pageIndex,10);
+        int totalPages = page.getTotalPages();
+        int pagesize = page.getSize();
+        Long totalElements = page.getTotalElements();
+        List<Patient> patientList=page.getContent();
         data.put("patientList",patientList);
         //状态码，200是成功，其他可自定义（如500表示查询失败）
         data.put("totalPages",totalPages);

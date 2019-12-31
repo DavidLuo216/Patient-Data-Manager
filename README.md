@@ -25,5 +25,17 @@ github仓库地址：<a>https://github.com/DavidLuo216/Patient-Data-Manager</a>
 
 ### 本地运行
 
-由于本项目采用前后端分离的开发形式，需要将前端代码的打包文件夹patient-data-manager
-放到网络服务器（apache httpd,nginx）的www/html目录下，再运行后端代码打包的jar文件
+由于本项目采用前后端分离的开发形式，需要将前端代码的打包文件夹hospital-data-manager
+放到HTTP服务器（apache httpd,nginx）的www/html目录下，再运行后端代码打包的jar文件
+
+1. 将文件夹hospital-data-manager
+   放到HTTP服务器网站根目录下
+   
+2. 运行jar包
+
+`
+java -jar patient-data-manager.jar
+`
+
+3. 访问<a>http://localhost:8080/hospital-data-manager</a>  
+*端口号根据本地HTTP服务器的配置而定

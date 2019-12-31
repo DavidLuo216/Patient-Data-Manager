@@ -1,6 +1,5 @@
 package cn.ecnuer996.manager.controller;
 
-import cn.ecnuer996.manager.dao.LogDao;
 import cn.ecnuer996.manager.error.ExceptionResponse;
 import cn.ecnuer996.manager.model.Log;
 import cn.ecnuer996.manager.model.Researcher;
@@ -42,20 +41,6 @@ public class ResearcherController extends ExceptionResponse {
         return response;
     }
 
-
-//    @GetMapping(value = "/researchers")
-//    public JSONArray getAllResearchers(){
-//        List<Researcher> researcherList = researcherService.findAll();
-//        JSONArray response = new JSONArray();
-//        for(Researcher r : researcherList){
-//            JSONObject tempJO = new JSONObject();
-//            tempJO.put("researcher",r);
-//            response.add(tempJO);
-//        }
-//        return response;
-//    }
-
-
     @GetMapping(value = "/researchers")
     public JSONObject findAll(){
         JSONObject response = new JSONObject();
@@ -67,7 +52,6 @@ public class ResearcherController extends ExceptionResponse {
         response.put("message","请求成功");
         return response;
     }
-
 
     /**
      * 多字段查询
@@ -138,7 +122,8 @@ public class ResearcherController extends ExceptionResponse {
     @PostMapping(value = "/researcherDelete")
     public JSONObject deleteAccount(@RequestParam String name){
         JSONObject response = new JSONObject();
-        researcherService.getResearcher(name);//先测试用户是否存在
+        //先测试用户是否存在
+        researcherService.getResearcher(name);
         researcherService.deleteResearcher(name);
         response.put("code",200);
         response.put("message","删除成功");
@@ -146,13 +131,12 @@ public class ResearcherController extends ExceptionResponse {
     }
 
     @PostMapping(value = "/update-researcher")
-    public JSONObject updateResearcher(Researcher researcher){
+    public JSONObject updateResearcher(@RequestBody Researcher researcher){
         JSONObject response = new JSONObject();
         researcherService.updateResearcherInfo(researcher);
         response.put("code",200);
         response.put("message","更新成功");
         return response;
-
     }
 
     @GetMapping(value = "/allLogs")
@@ -199,43 +183,5 @@ public class ResearcherController extends ExceptionResponse {
         response.put("message","请求成功");
         return response;
     }
-
-//    /**
-//     * 解禁某用户
-//     */
-//    @PatchMapping(value = "/researcher/unban")
-//    public JSONObject deProhibited(@RequestParam String name){
-//        JSONObject response = new JSONObject();
-//        Researcher researcher = researcherService.getResearcher(name);
-//        if(!researcher.isProhibited()){
-//            response.put("code",500);
-//            response.put("message","用户未被封禁");
-//            return response;
-//        }
-//        researcherService.updateIsProhibited(researcher,false);
-//        response.put("code",200);
-//        response.put("message","解禁成功");
-//        return response;
-//    }
-//
-//    /**
-//     * 封禁某用户
-//     */
-//    @PatchMapping(value = "/researcher/ban")
-//    public JSONObject prohibited(@RequestParam String name){
-//        JSONObject response = new JSONObject();
-//        Researcher researcher = researcherService.getResearcher(name);
-//        if(researcher.isProhibited()){
-//            response.put("code",500);
-//            response.put("message","用户已经被封禁");
-//            return response;
-//        }
-//        researcherService.updateIsProhibited(researcher,true);
-//        response.put("code",200);
-//        response.put("message","封禁成功");
-//        return response;
-//    }
-
-
 
 }

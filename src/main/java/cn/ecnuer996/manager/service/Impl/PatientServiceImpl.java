@@ -136,20 +136,34 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
-     * 分页查询
-     * @param patient
+     * 无条件分页查询
      * @param pageIndex
      * @param pageSize
      * @return
      */
     @Override
-    public Page<Patient> findByExample(Patient patient, int pageIndex, int pageSize) {
+    public Page<Patient> findByExample(int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        List<Patient> patientList = patientDao.findByExample(patient);
-        int count = patientList.size();
-        List<Patient> patientListPage  = patientDao.findPageable(patient,pageIndex,pageSize);
+        long count = patientDao.findCount();
+        List<Patient> patientListPage  = patientDao.findPageable(pageIndex,pageSize);
         return  PageableExecutionUtils.getPage(patientListPage,pageable,()->count);
+    }
 
+    /**
+     * 带条件分页查询，包含出生年份的范围查询
+     * @param beginYear
+     * @param endYear
+     * @param gender
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public Page<Patient> findByExample(String beginYear, String endYear, String gender, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        long count=patientDao.findCount();
+        List<Patient> patientListPage  = patientDao.findPageable(beginYear,endYear,gender, pageIndex,pageSize);
+        return  PageableExecutionUtils.getPage(patientListPage,pageable,()->count);
     }
 
     @Override

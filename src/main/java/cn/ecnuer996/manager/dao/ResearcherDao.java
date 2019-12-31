@@ -42,27 +42,22 @@ public class ResearcherDao {
         return mongoTemplate.find(query,Researcher.class,"researcher");
     }
 
-    //update
+    /**
+     * update
+     */
     public void updateResearcherInfo(Researcher researcher){
         Query query=new Query(Criteria.where("name").is(researcher.getName()));
         Update update = new Update();
-//        Researcher researcherOrigin = findResearcherByName(researcher.getName());
-//        update.set("name",researcher.getName())
-//                .set("password",researcher.getPassword())
-//                .set("roles",researcher.getRoles())
-//                .set("isProhibited",researcher.isProhibited());
         if(researcher.getPassword()!=null&&!researcher.getPassword().equals("")){
             update.set("password",researcher.getPassword());
         }
         if(researcher.getRoles()!=null&&!researcher.getRoles().isEmpty()){
             update.set("roles",researcher.getRoles());
         }
-//        boolean temp = researcher.isProhibited();
-
+        if(researcher.getLastLoginTime()!=null&&!"".equals(researcher.getLastLoginTime())){
+            update.set("lastLoginTime",researcher.getLastLoginTime());
+        }
         update.set("isProhibited",researcher.isProhibited());
-//        if(!researcher.isProhibited()){
-//            update.set("isProhibited",true);
-//        }
         mongoTemplate.updateFirst(query,update,Researcher.class);
     }
 
