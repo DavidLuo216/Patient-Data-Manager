@@ -1,9 +1,11 @@
 package cn.ecnuer996.manager;
 
+import cn.ecnuer996.manager.model.Diagnose;
 import cn.ecnuer996.manager.model.Patient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,4 +29,32 @@ public class MTTest extends PatientDataManagerApplicationTests {
         patientList.add(patient2);
         mongoTemplate.insert(patientList,Patient.class);
     }
+
+    @Test
+    public void kongzhizhen(){
+
+        Patient patient = new Patient();
+
+        mongoTemplate.insert(patient);
+
+        mongoTemplate.save(patient);
+
+
+
+
+
+
+        List<Diagnose> diagnoseList = patient.getDiagnose();
+        if(diagnoseList==null)
+            diagnoseList = new ArrayList<>();
+
+        diagnoseList.size();
+
+        if(diagnoseList==null)
+            System.out.println(1);
+        else
+            System.out.println(diagnoseList.size());
+    }
+
+
 }
